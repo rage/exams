@@ -18,9 +18,11 @@
     "start": "next start"
   },
   "devDependencies": {
+    "@types/node": "^13.7.6",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^3.8.2"
   },
   "husky": {
     "hooks": {
@@ -28,6 +30,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,md,ts,tsx}": "prettier --write"
   }
 }

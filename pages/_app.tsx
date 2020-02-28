@@ -3,7 +3,7 @@ import App from "next/app"
 import Head from "next/head"
 import { ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
-import theme from "../src/theme"
+import theme from "../lib/theme"
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -20,7 +20,7 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>My page</title>
+          <title>Kokeet</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
