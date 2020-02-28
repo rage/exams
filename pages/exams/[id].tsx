@@ -1,7 +1,13 @@
 import React from "react"
 import { NextPage } from "next"
 import { Exam, fetchExam } from "../../services/api"
-import { Typography, Card, CardContent, Breadcrumbs } from "@material-ui/core"
+import {
+  Typography,
+  Card,
+  CardContent,
+  Breadcrumbs,
+  Button,
+} from "@material-ui/core"
 import { DateTime } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
 import styled from "styled-components"
@@ -69,6 +75,13 @@ const Page: NextPage<PageProps> = ({ exam }) => {
           </StyledCard>
         )
       })}
+      <Link href="/exams/[id]/edit" as={`/exams/${exam.id}/edit`}>
+        <a>
+          <Button variant="outlined" color="primary">
+            Edit
+          </Button>
+        </a>
+      </Link>
     </>
   )
 }
