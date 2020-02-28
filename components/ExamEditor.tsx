@@ -19,6 +19,7 @@ import { Parser, HtmlRenderer } from "commonmark"
 import { KeyboardDateTimePicker } from "@material-ui/pickers"
 import { createExam, Exercise } from "../services/api"
 import Link from "next/link"
+import ExerciseEditor from "./ExerciseEditor"
 
 const Row = styled.div`
   margin-bottom: 1rem;
@@ -135,63 +136,21 @@ const ExamEditor = () => {
         </Row>
         {exerciseArray.map((text, exerciseNumber) => {
           return (
-            <ExerciseCard key={exerciseNumber}>
-              <ExerciseCardTitleContainer>
-                <Typography component="h2" variant="h5">
-                  Exercise {exerciseNumber + 1}
-                </Typography>
-                <DeleteButton
-                  onClick={e => {
-                    const newArray = [...exerciseArray]
-                    newArray.splice(exerciseNumber, 1)
-                    setExerciseArray(newArray)
-                  }}
-                  variant="outlined"
-                >
-                  Remove
-                </DeleteButton>
-              </ExerciseCardTitleContainer>
-              <StyledAppBar position="static">
-                <Tabs
-                  indicatorColor="primary"
-                  value={activeTab}
-                  onChange={(_, value) => {
-                    setActiveTab(value)
-                  }}
-                >
-                  <Tab label="Source" />
-                  <Tab label="Preview" />
-                </Tabs>
-              </StyledAppBar>
-              {activeTab === 0 && (
-                <TextField
-                  label={`Content`}
-                  fullWidth
-                  id={`exercise-${exerciseNumber + 1}`}
-                  variant="outlined"
-                  type="text"
-                  value={text}
-                  onChange={e => {
-                    const newArray = [...exerciseArray]
-                    newArray[exerciseNumber] = e.target.value
-                    setExerciseArray(newArray)
-                  }}
-                  rows={20}
-                  rowsMax={1000}
-                  multiline
-                  required
-                />
-              )}
-              {activeTab === 1 && (
-                <PreviewDiv
-                  dangerouslySetInnerHTML={{
-                    __html: writer.render(
-                      reader.parse(exerciseArray[exerciseNumber]),
-                    ),
-                  }}
-                />
-              )}
-            </ExerciseCard>
+            <ExerciseEditor
+              key={exerciseNumber}
+              exerciseNumber={exerciseNumber}
+              text={exerciseArray[exerciseNumber]}
+              onDelete={() => {
+                const newArray = [...exerciseArray]
+                newArray.splice(exerciseNumber, 1)
+                setExerciseArray(newArray)
+              }}
+              onChange={e => {
+                const newArray = [...exerciseArray]
+                newArray[exerciseNumber] = e.target.value
+                setExerciseArray(newArray)
+              }}
+            />
           )
         })}
         <ActionButton
