@@ -1,10 +1,8 @@
 import React, { useState } from "react"
 import {
   Typography,
-  Container,
   TextField,
   Button,
-  AppBar,
   Tab,
   Tabs,
   Card,
@@ -13,6 +11,7 @@ import {
 } from "@material-ui/core"
 import styled from "styled-components"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
 
 import { Parser, HtmlRenderer } from "commonmark"
 
@@ -57,6 +56,7 @@ const ErrorContainer = styled(Card)`
 `
 
 const App = () => {
+  const router = useRouter()
   const [name, setName] = useState("")
   const [startDatetime, setStartDatetime] = useState(new Date())
   const [endDatetime, setEndDatetime] = useState(new Date())
@@ -70,7 +70,7 @@ const App = () => {
   const writer = new HtmlRenderer()
 
   return (
-    <Container maxWidth="sm">
+    <>
       <Dialog
         open={error !== null}
         onClose={() => {
@@ -110,7 +110,7 @@ const App = () => {
             fullWidth
             value={startDatetime}
             onChange={date => {
-              setStartDatetime(date)
+              setStartDatetime(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
             required
@@ -124,7 +124,7 @@ const App = () => {
             fullWidth
             value={endDatetime}
             onChange={date => {
-              setEndDatetime(date)
+              setEndDatetime(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
             required
@@ -174,6 +174,7 @@ const App = () => {
                     setExerciseArray(newArray)
                   }}
                   rows={20}
+                  rowsMax={1000}
                   multiline
                   required
                 />
@@ -206,12 +207,14 @@ const App = () => {
         <ActionButton
           color="primary"
           fullWidth
+          type="submit"
           variant="contained"
           disabled={submitting}
-          onClick={async () => {
+          onClick={async e => {
+            e.preventDefault()
             setSubmitting(true)
             try {
-              await createExam({
+              const { id } = await createExam({
                 name: name,
                 starts_at: startDatetime,
                 ends_at: endDatetime,
@@ -221,6 +224,7 @@ const App = () => {
                   } as Exercise
                 }),
               })
+              router.push(`/exams/${id}`)
             } catch (e) {
               setError(e.message)
               setErrorData(e?.response?.data)
@@ -233,7 +237,7 @@ const App = () => {
         </ActionButton>
       </form>
       <br />
-    </Container>
+    </>
   )
 }
 

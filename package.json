@@ -28,6 +28,7 @@
     "rollback": "knex migrate:rollback"
   },
   "devDependencies": {
+    "@types/luxon": "^1.21.0",
     "@types/node": "^13.7.6",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",

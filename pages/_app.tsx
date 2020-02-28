@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import theme from "../lib/theme"
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import LuxonUtils from "@date-io/luxon"
+import Layout from "../components/Layout"
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -33,7 +34,9 @@ export default class MyApp extends App {
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <MuiPickersUtilsProvider utils={LuxonUtils}>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </MuiPickersUtilsProvider>
         </ThemeProvider>
       </React.Fragment>
