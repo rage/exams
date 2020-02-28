@@ -8,6 +8,7 @@ import {
   Card,
   Paper,
   Dialog,
+  Breadcrumbs,
 } from "@material-ui/core"
 import styled from "styled-components"
 import dynamic from "next/dynamic"
@@ -17,6 +18,7 @@ import { Parser, HtmlRenderer } from "commonmark"
 
 import { KeyboardDateTimePicker } from "@material-ui/pickers"
 import { createExam, Exercise } from "../../services/api"
+import Link from "next/link"
 
 const Row = styled.div`
   margin-bottom: 1rem;
@@ -55,12 +57,16 @@ const ErrorContainer = styled(Card)`
   padding: 1rem;
 `
 
+const StyledBreadcrumbs = styled(Breadcrumbs)`
+  margin-bottom: 1rem;
+`
+
 const App = () => {
   const router = useRouter()
   const [name, setName] = useState("")
   const [startDatetime, setStartDatetime] = useState(new Date())
   const [endDatetime, setEndDatetime] = useState(new Date())
-  const [exerciseArray, setExerciseArray] = useState(["best exercise"])
+  const [exerciseArray, setExerciseArray] = useState([])
   const [activeTab, setActiveTab] = useState(0)
   const [error, setError] = useState(null)
   const [errorData, setErrorData] = useState(null)
@@ -82,7 +88,12 @@ const App = () => {
           <pre>{errorData && JSON.stringify(errorData, undefined, 2)}</pre>
         </ErrorContainer>
       </Dialog>
-      <br />
+      <StyledBreadcrumbs aria-label="breadcrumb">
+        <Link href="/exams">
+          <a>Exams</a>
+        </Link>
+        <Typography color="textPrimary">New exam</Typography>
+      </StyledBreadcrumbs>
       <Typography component="h1" variant="h3">
         New exam
       </Typography>
@@ -228,7 +239,6 @@ const App = () => {
             } catch (e) {
               setError(e.message)
               setErrorData(e?.response?.data)
-            } finally {
               setSubmitting(false)
             }
           }}

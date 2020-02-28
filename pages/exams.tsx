@@ -1,6 +1,6 @@
 import React from "react"
 import { NextPage } from "next"
-import { Typography, Card } from "@material-ui/core"
+import { Typography, Card, Button } from "@material-ui/core"
 import { DateTime } from "luxon"
 import { SimpleExam, fetchExams } from "../services/api"
 import styled from "styled-components"
@@ -47,6 +47,14 @@ const Page: NextPage<PageProps> = ({ exams }) => {
           </Link>
         )
       })}
+      <br />
+      <Link href="/exams/new">
+        <a>
+          <Button fullWidth variant="outlined" color="primary">
+            New exam
+          </Button>
+        </a>
+      </Link>
     </>
   )
 }
