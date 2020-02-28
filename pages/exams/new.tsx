@@ -16,6 +16,7 @@ import dynamic from "next/dynamic"
 import { Parser, HtmlRenderer } from "commonmark"
 
 import { KeyboardDateTimePicker } from "@material-ui/pickers"
+import { createExam, Exercise } from "../../services/api"
 
 const Row = styled.div`
   margin-bottom: 1rem;
@@ -51,6 +52,7 @@ const ActionButton = styled(Button)`
 `
 
 const App = () => {
+  const [name, setName] = useState("")
   const [startDatetime, setStartDatetime] = useState(new Date())
   const [endDatetime, setEndDatetime] = useState(new Date())
   const [exerciseArray, setExerciseArray] = useState(["best exercise"])
@@ -75,6 +77,10 @@ const App = () => {
             variant="outlined"
             type="text"
             required
+            value={name}
+            onChange={e => {
+              setName(e.target.value)
+            }}
           />
         </Row>
         <Row>
@@ -178,7 +184,23 @@ const App = () => {
 
         <br />
 
-        <ActionButton color="primary" fullWidth variant="contained">
+        <ActionButton
+          color="primary"
+          fullWidth
+          variant="contained"
+          onClick={() => {
+            createExam({
+              name: name,
+              starts_at: startDatetime,
+              ends_at: endDatetime,
+              exercises: exerciseArray.map(o => {
+                return {
+                  content: o,
+                } as Exercise
+              }),
+            })
+          }}
+        >
           Save
         </ActionButton>
       </form>
