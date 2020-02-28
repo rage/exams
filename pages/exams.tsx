@@ -1,6 +1,6 @@
 import React from "react"
 import { NextPage } from "next"
-import { Typography, Card, Button } from "@material-ui/core"
+import { Typography, Card, Button, ButtonBase } from "@material-ui/core"
 import { DateTime } from "luxon"
 import { SimpleExam, fetchExams } from "../services/api"
 import styled from "styled-components"
@@ -11,8 +11,13 @@ interface PageProps {
 }
 
 const ExamCard = styled(Card)`
-  margin-bottom: 1rem;
   padding: 1rem;
+  width: 100%;
+`
+
+const StyledButtonBase = styled(ButtonBase)`
+  margin-bottom: 1rem;
+  width: 100%;
 `
 
 const StyledLink = styled.a`
@@ -33,16 +38,18 @@ const Page: NextPage<PageProps> = ({ exams }) => {
         return (
           <Link key={o.id} href="/exams/[id].tsx" as={`/exams/${o.id}`}>
             <StyledLink>
-              <ExamCard>
-                <Typography variant="h5" component="h2">
-                  {o.name}
-                </Typography>
-                <Typography>
-                  {DateTime.fromISO(o.starts_at).toLocaleString(
-                    DateTime.DATE_FULL,
-                  )}
-                </Typography>
-              </ExamCard>
+              <StyledButtonBase component="div">
+                <ExamCard>
+                  <Typography variant="h5" component="h2">
+                    {o.name}
+                  </Typography>
+                  <Typography>
+                    {DateTime.fromISO(o.starts_at).toLocaleString(
+                      DateTime.DATE_FULL,
+                    )}
+                  </Typography>
+                </ExamCard>
+              </StyledButtonBase>
             </StyledLink>
           </Link>
         )
