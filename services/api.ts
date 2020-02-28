@@ -14,6 +14,6 @@ export interface Exercise {
 }
 
 export async function createExam(exam: NewExam) {
-  const res = await client.post("/exams", exam)
+  const res = await client.post("/exams", { exam })
   console.log(JSON.stringify(res.data))
 }
