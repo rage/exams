@@ -4,22 +4,27 @@ import { Exam, fetchExam } from "../../services/api"
 import { Typography, Card, CardContent } from "@material-ui/core"
 import { DateTime } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
-import Link from "../../components/Link"
+import styled from "styled-components"
 
 interface PageProps {
   exam: Exam
 }
 
+const StyledCard = styled(Card)`
+  margin-bottom: 1rem;
+`
+
 const Page: NextPage<PageProps> = ({ exam }) => {
   const reader = new Parser()
   const writer = new HtmlRenderer()
+
   return (
     <>
       <Typography variant="h3" component="h1">
         {exam.name}
       </Typography>
 
-      <Card>
+      <StyledCard>
         <CardContent>
           <Typography>
             Starts at:{" "}
@@ -34,11 +39,11 @@ const Page: NextPage<PageProps> = ({ exam }) => {
               .toLocaleString(DateTime.DATETIME_FULL)}
           </Typography>
         </CardContent>
-      </Card>
-      <br />
+      </StyledCard>
+
       {exam.exercises.map((exercise, i) => {
         return (
-          <Card key={exercise.id}>
+          <StyledCard key={exercise.id}>
             <CardContent>
               <Typography variant="h5" component="h2">
                 Exercise {i + 1}
@@ -50,7 +55,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
                 }}
               />
             </CardContent>
-          </Card>
+          </StyledCard>
         )
       })}
     </>

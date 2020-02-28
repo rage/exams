@@ -17,6 +17,13 @@ export interface Exam {
   exercises: Exercise[]
 }
 
+export interface SimpleExam {
+  id: string
+  name: string
+  starts_at: string
+  ends_at: string
+}
+
 export interface NewExercise {
   content: string
 }
@@ -33,4 +40,9 @@ export async function createExam(exam: NewExam): Promise<Exam> {
 export async function fetchExam(id: string): Promise<Exam> {
   const res = await client.get(`/exams/${id}`)
   return res.data.exam
+}
+
+export async function fetchExams(): Promise<SimpleExam[]> {
+  const res = await client.get(`/exams`)
+  return res.data.exams
 }
