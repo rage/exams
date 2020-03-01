@@ -5,6 +5,7 @@ import { DateTime } from "luxon"
 import { SimpleExam, fetchExams } from "../services/api"
 import styled from "styled-components"
 import Link from "next/link"
+import { withLoggedIn } from "../contexes/LoginStateContext"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -71,4 +72,4 @@ Page.getInitialProps = async ctx => {
   return { exams }
 }
 
-export default Page
+export default withLoggedIn(Page)

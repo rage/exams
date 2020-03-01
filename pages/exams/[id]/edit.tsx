@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Typography, Breadcrumbs, NoSsr } from "@material-ui/core"
+import { Typography, Breadcrumbs } from "@material-ui/core"
 import styled from "styled-components"
 import Link from "next/link"
 import ExamEditor from "../../../components/ExamEditor"
@@ -26,16 +26,14 @@ const Page = ({ exam }: PageProps) => {
       <Typography component="h1" variant="h3">
         Edit exam
       </Typography>
-      <NoSsr>
-        <ExamEditor
-          initialName={exam.name}
-          initialEndsAt={DateTime.fromISO(exam.ends_at).toJSDate()}
-          initialStartsAt={DateTime.fromISO(exam.starts_at).toJSDate()}
-          initialExercises={exam.exercises}
-          id={exam.id}
-          isEdit
-        />
-      </NoSsr>
+      <ExamEditor
+        initialName={exam.name}
+        initialEndsAt={DateTime.fromISO(exam.ends_at).toJSDate()}
+        initialStartsAt={DateTime.fromISO(exam.starts_at).toJSDate()}
+        initialExercises={exam.exercises}
+        id={exam.id}
+        isEdit
+      />
     </>
   )
 }

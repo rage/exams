@@ -1,14 +1,15 @@
-import React, { useState } from "react"
-import { Typography, Breadcrumbs, NoSsr } from "@material-ui/core"
+import React from "react"
+import { Typography, Breadcrumbs } from "@material-ui/core"
 import styled from "styled-components"
 import Link from "next/link"
 import ExamEditor from "../../components/ExamEditor"
+import { withLoggedIn } from "../../contexes/LoginStateContext"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
 `
 
-const App = () => {
+const Page = () => {
   return (
     <>
       <StyledBreadcrumbs aria-label="breadcrumb">
@@ -20,11 +21,9 @@ const App = () => {
       <Typography component="h1" variant="h3">
         New exam
       </Typography>
-      <NoSsr>
-        <ExamEditor />
-      </NoSsr>
+      <ExamEditor />
     </>
   )
 }
 
-export default App
+export default withLoggedIn(Page)

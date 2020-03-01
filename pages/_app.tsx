@@ -1,12 +1,11 @@
 import React from "react"
 import App from "next/app"
 import Head from "next/head"
-import { ThemeProvider } from "@material-ui/core/styles"
+import { StylesProvider, ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import theme from "../lib/theme"
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import LuxonUtils from "@date-io/luxon"
-import Layout from "../components/Layout"
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -29,16 +28,15 @@ export default class MyApp extends App {
             content="minimum-scale=1, initial-scale=1, width=device-width"
           />
         </Head>
-
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <MuiPickersUtilsProvider utils={LuxonUtils}>
-            <Layout>
+        <StylesProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <MuiPickersUtilsProvider utils={LuxonUtils}>
               <Component {...pageProps} />
-            </Layout>
-          </MuiPickersUtilsProvider>
-        </ThemeProvider>
+            </MuiPickersUtilsProvider>
+          </ThemeProvider>
+        </StylesProvider>
       </React.Fragment>
     )
   }

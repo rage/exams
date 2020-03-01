@@ -12,6 +12,7 @@ import { DateTime } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
 import styled from "styled-components"
 import Link from "next/link"
+import { withLoggedIn } from "../../contexes/LoginStateContext"
 
 interface PageProps {
   exam: Exam
@@ -94,4 +95,4 @@ Page.getInitialProps = async ctx => {
   return { exam }
 }
 
-export default Page
+export default withLoggedIn(Page)
