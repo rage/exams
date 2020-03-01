@@ -63,6 +63,19 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         </CardContent>
       </StyledCard>
 
+      <StyledCard>
+        <CardContent>
+          <Typography component="h2" variant="h5">
+            Instructions to show before starting the exam
+          </Typography>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: writer.render(reader.parse(exam.pre_instructions)),
+            }}
+          />
+        </CardContent>
+      </StyledCard>
+
       {exam.exercises.map((exercise, i) => {
         return (
           <StyledCard key={exercise.id}>

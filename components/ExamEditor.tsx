@@ -20,6 +20,7 @@ import { KeyboardDateTimePicker } from "@material-ui/pickers"
 import { createExam, Exercise, updateExam } from "../services/api"
 import Link from "next/link"
 import ExerciseEditor from "./ExerciseEditor"
+import MarkdownEditor from "./MarkdownEditor"
 
 const Row = styled.div`
   margin-bottom: 1rem;
@@ -88,11 +89,15 @@ const ExamEditor = ({
   initialEndsAt = new Date(),
   initialExercises = [],
   intialTimeMinutes = 120,
+  initialPreInstructions = "",
   isEdit = false,
   id = "",
 }) => {
   const router = useRouter()
   const [name, setName] = useState(initialName)
+  const [preExamInstructions, setPreExamInstructions] = useState(
+    initialPreInstructions,
+  )
   const [timeMinutes, setTimeMinutes] = useState(intialTimeMinutes)
   const [startsAt, setStartsAt] = useState(initialStartsAt)
   const [endsAt, setEndsAt] = useState(initialEndsAt)
@@ -164,18 +169,35 @@ const ExamEditor = ({
             required
           />
         </Row>
-        <TextField
-          label="Time to do the exam in minutes"
-          fullWidth
-          id="time-minutes"
-          variant="outlined"
-          type="number"
-          required
-          value={timeMinutes}
-          onChange={e => {
-            setTimeMinutes(parseInt(e.target.value, 10))
-          }}
-        />
+        <Row>
+          <TextField
+            label="Time to do the exam in minutes"
+            fullWidth
+            id="time-minutes"
+            variant="outlined"
+            type="number"
+            required
+            value={timeMinutes}
+            onChange={e => {
+              setTimeMinutes(parseInt(e.target.value, 10))
+            }}
+          />
+        </Row>
+
+        <ExerciseCard>
+          <ExerciseCardTitleContainer>
+            <Typography component="h2" variant="h5">
+              Instructions to show before starting the exam
+            </Typography>
+          </ExerciseCardTitleContainer>
+          <MarkdownEditor
+            text={preExamInstructions}
+            onChange={e => {
+              setPreExamInstructions(e.target.value)
+            }}
+          ></MarkdownEditor>
+        </ExerciseCard>
+
         {exerciseArray.map((entry, exerciseNumber) => {
           return (
             <ExerciseEditor
@@ -227,6 +249,7 @@ const ExamEditor = ({
                   ends_at: endsAt.toISOString(),
                   exercises: exerciseArray,
                   time_minutes: timeMinutes,
+                  pre_instructions: preExamInstructions,
                 })
               } else {
                 res = await createExam({
@@ -235,9 +258,10 @@ const ExamEditor = ({
                   ends_at: endsAt,
                   exercises: exerciseArray,
                   time_minutes: timeMinutes,
+                  pre_instructions: preExamInstructions,
                 })
               }
-              router.push(`/exams/${res.id}`)
+              router.push(`/manage/exams/${res.id}`)
             } catch (e) {
               setError(e.message)
               setErrorData(e?.response?.data)

@@ -2,7 +2,9 @@ import React, { useState } from "react"
 import Layout from "../../components/Layout"
 import { withLoggedIn } from "../../contexes/LoginStateContext"
 import { fetchExam, Exam } from "../../services/api"
+import { Parser, HtmlRenderer } from "commonmark"
 import { NextPage } from "next"
+import styled from "styled-components"
 import {
   Typography,
   Button,
@@ -11,6 +13,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  CardContent,
+  Card,
 } from "@material-ui/core"
 import { DateTime } from "luxon"
 
@@ -18,8 +22,14 @@ interface PageProps {
   exam: Exam
 }
 
+const StyledCard = styled(Card)`
+  margin-bottom: 1rem;
+`
+
 const Page: NextPage<PageProps> = ({ exam }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const reader = new Parser()
+  const writer = new HtmlRenderer()
   return (
     <Layout>
       <Typography variant="h3" component="h1">
@@ -46,6 +56,15 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         se.
       </Typography>
       <br />
+
+      <div
+        dangerouslySetInnerHTML={{
+          __html: writer.render(reader.parse(exam.pre_instructions)),
+        }}
+      />
+
+      <br />
+
       <Button
         onClick={() => {
           setConfirmDialogOpen(true)
@@ -68,7 +87,9 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Kun olet aloittanut kokeen, et voi enää perua aloittamista. Aloittamisen jälkeen sinulla on  {exam.time_minutes} minuuttia aikaa tehdä koetta.
+            Kun olet aloittanut kokeen, et voi enää perua aloittamista.
+            Aloittamisen jälkeen sinulla on {exam.time_minutes} minuuttia aikaa
+            tehdä koetta.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

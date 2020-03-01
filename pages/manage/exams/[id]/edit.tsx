@@ -33,6 +33,7 @@ const Page = ({ exam }: PageProps) => {
         initialEndsAt={DateTime.fromISO(exam.ends_at).toJSDate()}
         initialStartsAt={DateTime.fromISO(exam.starts_at).toJSDate()}
         initialExercises={exam.exercises}
+        initialPreInstructions={exam.pre_instructions}
         id={exam.id}
         isEdit
       />

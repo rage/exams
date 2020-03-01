@@ -28,7 +28,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 const handlePost = async (req: NextApiRequest, res: NextApiResponse) => {
   const inserted = await transaction(Exam.knex(), trx => {
     return Exam.query(trx)
-      .allowGraph("[name, starts_at, ends_at, time_minutes, exercises.content]")
+      .allowGraph(
+        "[name, starts_at, ends_at, time_minutes, pre_instructions, exercises.content]",
+      )
       .insertGraph(req.body.exam)
   })
   res.status(200).json({ exam: inserted })

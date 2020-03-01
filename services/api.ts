@@ -7,6 +7,7 @@ export interface NewExam {
   starts_at: Date
   ends_at: Date
   time_minutes: number
+  pre_instructions: string
   exercises: NewExercise[]
 }
 
@@ -16,6 +17,7 @@ export interface Exam {
   starts_at: string
   ends_at: string
   time_minutes: number
+  pre_instructions: string
   exercises: Exercise[]
 }
 
@@ -24,6 +26,7 @@ export interface SimpleExam {
   name: string
   starts_at: string
   ends_at: string
+  pre_instructions: string
   time_minutes: number
 }
 
