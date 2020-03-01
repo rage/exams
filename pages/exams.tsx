@@ -6,6 +6,7 @@ import { SimpleExam, fetchExams } from "../services/api"
 import styled from "styled-components"
 import Link from "next/link"
 import { withLoggedIn } from "../contexes/LoginStateContext"
+import Layout from "../components/Layout"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -28,7 +29,7 @@ const StyledLink = styled.a`
 
 const Page: NextPage<PageProps> = ({ exams }) => {
   return (
-    <>
+    <Layout>
       <Typography variant="h3" component="h1">
         Exams
       </Typography>
@@ -63,7 +64,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
           </Button>
         </a>
       </Link>
-    </>
+    </Layout>
   )
 }
 

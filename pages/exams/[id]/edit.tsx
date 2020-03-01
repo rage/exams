@@ -5,6 +5,8 @@ import Link from "next/link"
 import ExamEditor from "../../../components/ExamEditor"
 import { fetchExam, Exam } from "../../../services/api"
 import { DateTime } from "luxon"
+import Layout from "../../../components/Layout"
+import { withLoggedIn } from "../../../contexes/LoginStateContext"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
@@ -16,7 +18,7 @@ interface PageProps {
 
 const Page = ({ exam }: PageProps) => {
   return (
-    <>
+    <Layout>
       <StyledBreadcrumbs aria-label="breadcrumb">
         <Link href="/exams">
           <a>Exams</a>
@@ -34,7 +36,7 @@ const Page = ({ exam }: PageProps) => {
         id={exam.id}
         isEdit
       />
-    </>
+    </Layout>
   )
 }
 
@@ -43,4 +45,4 @@ Page.getInitialProps = async ctx => {
   return { exam }
 }
 
-export default Page
+export default withLoggedIn(Page)

@@ -5,21 +5,27 @@ import cookies from "next-cookies"
 export interface LoginStateContextValue {
   loggedIn: boolean
   setAccessToken: (value: string | undefined) => void
+  admin: boolean
 }
 
 const defaultValue: LoginStateContextValue = {
   loggedIn: false,
+  admin: false,
   setAccessToken: () => {
     console.warn("Set accesstoken called without withLoggedIn")
   },
 }
 
 export const withLoggedIn = PageComponent => {
-  const WithLoggedIn = ({ accessToken, ...pageProps }) => {
+  const WithLoggedIn = ({ accessToken, admin, ...pageProps }) => {
     const [currentToken, setCurrentToken] = useState(accessToken)
     return (
       <LoginStateContext.Provider
-        value={{ loggedIn: !!currentToken, setAccessToken: setCurrentToken }}
+        value={{
+          loggedIn: !!currentToken,
+          admin: !!admin,
+          setAccessToken: setCurrentToken,
+        }}
       >
         <PageComponent {...pageProps} />
       </LoginStateContext.Provider>
@@ -35,10 +41,11 @@ export const withLoggedIn = PageComponent => {
     }
 
     let accessToken = cookies(ctx).access_token
+    let admin = cookies(ctx).admin === "true"
     if (accessToken === "") {
       accessToken = undefined
     }
-    return { ...pageProps, accessToken }
+    return { ...pageProps, accessToken, admin }
   }
   return WithLoggedIn
 }

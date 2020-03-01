@@ -13,6 +13,7 @@ import { Parser, HtmlRenderer } from "commonmark"
 import styled from "styled-components"
 import Link from "next/link"
 import { withLoggedIn } from "../../contexes/LoginStateContext"
+import Layout from "../../components/Layout"
 
 interface PageProps {
   exam: Exam
@@ -31,7 +32,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   const writer = new HtmlRenderer()
 
   return (
-    <>
+    <Layout>
       <StyledBreadcrumbs aria-label="breadcrumb">
         <Link href="/exams">
           <a>Exams</a>
@@ -86,7 +87,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
           </Button>
         </a>
       </Link>
-    </>
+    </Layout>
   )
 }
 

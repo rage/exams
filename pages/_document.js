@@ -75,13 +75,14 @@ MyDocument.getInitialProps = async ctx => {
       styles: (
         <React.Fragment>
           {initialProps.styles}
-          {sheets.getStyleElement()}
-          {sheet.getStyleElement()}
-          {flush() || null}
+          {muiSheets.getStyleElement()}
+          {styledSheet.getStyleElement()}
         </React.Fragment>
       ),
     }
+  } catch (e) {
+    console.warn("Rendering styles crashed with", e)
   } finally {
-    sheet.seal()
+    styledSheet.seal()
   }
 }

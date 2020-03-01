@@ -4,6 +4,7 @@ import styled from "styled-components"
 import Link from "next/link"
 import ExamEditor from "../../components/ExamEditor"
 import { withLoggedIn } from "../../contexes/LoginStateContext"
+import Layout from "../../components/Layout"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
@@ -11,7 +12,7 @@ const StyledBreadcrumbs = styled(Breadcrumbs)`
 
 const Page = () => {
   return (
-    <>
+    <Layout>
       <StyledBreadcrumbs aria-label="breadcrumb">
         <Link href="/exams">
           <a>Exams</a>
@@ -22,7 +23,7 @@ const Page = () => {
         New exam
       </Typography>
       <ExamEditor />
-    </>
+    </Layout>
   )
 }
 
