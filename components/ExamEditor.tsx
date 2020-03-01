@@ -17,7 +17,7 @@ import { useRouter } from "next/router"
 import { Parser, HtmlRenderer } from "commonmark"
 
 import { KeyboardDateTimePicker } from "@material-ui/pickers"
-import { createExam, Exercise } from "../services/api"
+import { createExam, Exercise, updateExam } from "../services/api"
 import Link from "next/link"
 import ExerciseEditor from "./ExerciseEditor"
 
@@ -62,16 +62,44 @@ const PreviewDiv = styled.div`
   min-height: 400px;
 `
 
-const ExamEditor = () => {
+interface ExamEditorProps {
+  initialValues: InitialValues
+}
+
+interface InitialValues {
+  name: string
+  startsAt: Date
+  endsAt: Date
+  exercises: string[]
+}
+
+const defaultProps: ExamEditorProps = {
+  initialValues: {
+    name: "",
+    startsAt: new Date(),
+    endsAt: new Date(),
+    exercises: [],
+  },
+}
+
+const ExamEditor = ({
+  initialName = "",
+  initialStartsAt = new Date(),
+  initialEndsAt = new Date(),
+  initialExercises = [],
+  isEdit = false,
+  id = "",
+}) => {
   const router = useRouter()
-  const [name, setName] = useState("")
-  const [startDatetime, setStartDatetime] = useState(new Date())
-  const [endDatetime, setEndDatetime] = useState(new Date())
-  const [exerciseArray, setExerciseArray] = useState([])
-  const [activeTab, setActiveTab] = useState(0)
+  const [name, setName] = useState(initialName)
+  const [startsAt, setStartsAt] = useState(initialStartsAt)
+  const [endsAt, setEndsAt] = useState(initialEndsAt)
+  const [exerciseArray, setExerciseArray] = useState(initialExercises)
   const [error, setError] = useState(null)
   const [errorData, setErrorData] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+
+  const isValid = name !== ""
 
   const reader = new Parser()
   const writer = new HtmlRenderer()
@@ -112,9 +140,9 @@ const ExamEditor = () => {
             label="Start date and time"
             inputVariant="outlined"
             fullWidth
-            value={startDatetime}
+            value={startsAt}
             onChange={date => {
-              setStartDatetime(date.toJSDate())
+              setStartsAt(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
             required
@@ -126,20 +154,20 @@ const ExamEditor = () => {
             label="End date and time"
             inputVariant="outlined"
             fullWidth
-            value={endDatetime}
+            value={endsAt}
             onChange={date => {
-              setEndDatetime(date.toJSDate())
+              setEndsAt(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
             required
           />
         </Row>
-        {exerciseArray.map((text, exerciseNumber) => {
+        {exerciseArray.map((entry, exerciseNumber) => {
           return (
             <ExerciseEditor
               key={exerciseNumber}
               exerciseNumber={exerciseNumber}
-              text={exerciseArray[exerciseNumber]}
+              text={entry.content}
               onDelete={() => {
                 const newArray = [...exerciseArray]
                 newArray.splice(exerciseNumber, 1)
@@ -147,7 +175,7 @@ const ExamEditor = () => {
               }}
               onChange={e => {
                 const newArray = [...exerciseArray]
-                newArray[exerciseNumber] = e.target.value
+                newArray[exerciseNumber].content = e.target.value
                 setExerciseArray(newArray)
               }}
             />
@@ -158,7 +186,7 @@ const ExamEditor = () => {
           fullWidth
           variant="outlined"
           onClick={() => {
-            setExerciseArray(exerciseArray.concat(""))
+            setExerciseArray(exerciseArray.concat({ content: "" }))
           }}
         >
           Add exercise
@@ -171,22 +199,29 @@ const ExamEditor = () => {
           fullWidth
           type="submit"
           variant="contained"
-          disabled={submitting}
+          disabled={!isValid || submitting}
           onClick={async e => {
             e.preventDefault()
             setSubmitting(true)
             try {
-              const { id } = await createExam({
-                name: name,
-                starts_at: startDatetime,
-                ends_at: endDatetime,
-                exercises: exerciseArray.map(o => {
-                  return {
-                    content: o,
-                  } as Exercise
-                }),
-              })
-              router.push(`/exams/${id}`)
+              let res = null
+              if (isEdit) {
+                res = await updateExam({
+                  id,
+                  name: name,
+                  starts_at: startsAt.toISOString(),
+                  ends_at: endsAt.toISOString(),
+                  exercises: exerciseArray,
+                })
+              } else {
+                res = await createExam({
+                  name: name,
+                  starts_at: startsAt,
+                  ends_at: endsAt,
+                  exercises: exerciseArray,
+                })
+              }
+              router.push(`/exams/${res.id}`)
             } catch (e) {
               setError(e.message)
               setErrorData(e?.response?.data)

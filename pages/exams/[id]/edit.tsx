@@ -3,12 +3,18 @@ import { Typography, Breadcrumbs, NoSsr } from "@material-ui/core"
 import styled from "styled-components"
 import Link from "next/link"
 import ExamEditor from "../../../components/ExamEditor"
+import { fetchExam, Exam } from "../../../services/api"
+import { DateTime } from "luxon"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
 `
 
-const App = () => {
+interface PageProps {
+  exam: Exam
+}
+
+const Page = ({ exam }: PageProps) => {
   return (
     <>
       <StyledBreadcrumbs aria-label="breadcrumb">
@@ -21,10 +27,22 @@ const App = () => {
         Edit exam
       </Typography>
       <NoSsr>
-        <ExamEditor />
+        <ExamEditor
+          initialName={exam.name}
+          initialEndsAt={DateTime.fromISO(exam.ends_at).toJSDate()}
+          initialStartsAt={DateTime.fromISO(exam.starts_at).toJSDate()}
+          initialExercises={exam.exercises}
+          id={exam.id}
+          isEdit
+        />
       </NoSsr>
     </>
   )
 }
 
-export default App
+Page.getInitialProps = async ctx => {
+  const exam = await fetchExam(ctx.query.id?.toString())
+  return { exam }
+}
+
+export default Page

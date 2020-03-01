@@ -37,6 +37,11 @@ export async function createExam(exam: NewExam): Promise<Exam> {
   return res.data.exam
 }
 
+export async function updateExam(exam: Exam): Promise<Exam> {
+  const res = await client.patch(`/exams/${exam.id}`, { exam })
+  return res.data.exam
+}
+
 export async function fetchExam(id: string): Promise<Exam> {
   const res = await client.get(`/exams/${id}`)
   return res.data.exam
