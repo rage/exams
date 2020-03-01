@@ -124,7 +124,19 @@ const ExamEditor = ({
           <pre>{errorData && JSON.stringify(errorData, undefined, 2)}</pre>
         </ErrorContainer>
       </Dialog>
-
+      <br />
+      <Typography>
+        Fields with preview tabs support markdown syntax. For syntax reference,
+        see the commonmark spec:{" "}
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://spec.commonmark.org/current/"
+        >
+          https://spec.commonmark.org/current/
+        </a>
+        .
+      </Typography>
       <br />
       <form>
         <Row>
