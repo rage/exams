@@ -55,6 +55,9 @@ const Page: NextPage<PageProps> = ({ exam }) => {
               .toLocal()
               .toLocaleString(DateTime.DATETIME_FULL)}
           </Typography>
+          <Typography>
+            Time to do the exam in minutes: {exam.time_minutes}
+          </Typography>
         </CardContent>
       </StyledCard>
 

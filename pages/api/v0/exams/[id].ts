@@ -41,7 +41,7 @@ async function handlePatch(req: NextApiRequest, res: NextApiResponse) {
     const result = await transaction(Exam.knex(), trx => {
       return Exam.query(trx)
         .allowGraph(
-          "[id, name, starts_at, ends_at, exercises.[content, id]]",
+          "[id, name, starts_at, ends_at, time_minutes, exercises.[content, id]]",
         )
         .upsertGraph(req.body.exam)
     })

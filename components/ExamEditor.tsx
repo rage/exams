@@ -87,11 +87,13 @@ const ExamEditor = ({
   initialStartsAt = new Date(),
   initialEndsAt = new Date(),
   initialExercises = [],
+  intialTimeMinutes = 120,
   isEdit = false,
   id = "",
 }) => {
   const router = useRouter()
   const [name, setName] = useState(initialName)
+  const [timeMinutes, setTimeMinutes] = useState(intialTimeMinutes)
   const [startsAt, setStartsAt] = useState(initialStartsAt)
   const [endsAt, setEndsAt] = useState(initialEndsAt)
   const [exerciseArray, setExerciseArray] = useState(initialExercises)
@@ -137,7 +139,7 @@ const ExamEditor = ({
         <Row>
           <KeyboardDateTimePicker
             ampm={false}
-            label="Start date and time"
+            label="Starts at"
             inputVariant="outlined"
             fullWidth
             value={startsAt}
@@ -151,7 +153,7 @@ const ExamEditor = ({
         <Row>
           <KeyboardDateTimePicker
             ampm={false}
-            label="End date and time"
+            label="Ends at"
             inputVariant="outlined"
             fullWidth
             value={endsAt}
@@ -162,6 +164,18 @@ const ExamEditor = ({
             required
           />
         </Row>
+        <TextField
+          label="Time to do the exam in minutes"
+          fullWidth
+          id="time-minutes"
+          variant="outlined"
+          type="number"
+          required
+          value={timeMinutes}
+          onChange={e => {
+            setTimeMinutes(parseInt(e.target.value, 10))
+          }}
+        />
         {exerciseArray.map((entry, exerciseNumber) => {
           return (
             <ExerciseEditor
@@ -212,6 +226,7 @@ const ExamEditor = ({
                   starts_at: startsAt.toISOString(),
                   ends_at: endsAt.toISOString(),
                   exercises: exerciseArray,
+                  time_minutes: timeMinutes,
                 })
               } else {
                 res = await createExam({
@@ -219,6 +234,7 @@ const ExamEditor = ({
                   starts_at: startsAt,
                   ends_at: endsAt,
                   exercises: exerciseArray,
+                  time_minutes: timeMinutes,
                 })
               }
               router.push(`/exams/${res.id}`)
