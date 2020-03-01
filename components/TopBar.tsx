@@ -38,7 +38,7 @@ const TopBar = () => {
           </MainNavigationLink>
         </Link>
         {admin && (
-          <Link href="/exams">
+          <Link href="/manage/exams">
             <NavigationLink>Manage exams</NavigationLink>
           </Link>
         )}

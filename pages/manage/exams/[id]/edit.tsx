@@ -2,11 +2,11 @@ import React, { useState } from "react"
 import { Typography, Breadcrumbs } from "@material-ui/core"
 import styled from "styled-components"
 import Link from "next/link"
-import ExamEditor from "../../../components/ExamEditor"
-import { fetchExam, Exam } from "../../../services/api"
+import { fetchExam, Exam } from "../../../../services/api"
 import { DateTime } from "luxon"
-import Layout from "../../../components/Layout"
-import { withLoggedIn } from "../../../contexes/LoginStateContext"
+import { withLoggedIn } from "../../../../contexes/LoginStateContext"
+import Layout from "../../../../components/Layout"
+import ExamEditor from "../../../../components/ExamEditor"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
@@ -20,7 +20,7 @@ const Page = ({ exam }: PageProps) => {
   return (
     <Layout>
       <StyledBreadcrumbs aria-label="breadcrumb">
-        <Link href="/exams">
+        <Link href="/manage/exams">
           <a>Exams</a>
         </Link>
         <Typography color="textPrimary">Edit exam</Typography>

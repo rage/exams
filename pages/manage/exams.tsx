@@ -2,11 +2,11 @@ import React from "react"
 import { NextPage } from "next"
 import { Typography, Card, Button, ButtonBase } from "@material-ui/core"
 import { DateTime } from "luxon"
-import { SimpleExam, fetchExams } from "../services/api"
+import { SimpleExam, fetchExams } from "../../services/api"
 import styled from "styled-components"
 import Link from "next/link"
-import { withLoggedIn } from "../contexes/LoginStateContext"
-import Layout from "../components/Layout"
+import { withLoggedIn } from "../../contexes/LoginStateContext"
+import Layout from "../../components/Layout"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -38,7 +38,11 @@ const Page: NextPage<PageProps> = ({ exams }) => {
 
       {exams.map(o => {
         return (
-          <Link key={o.id} href="/exams/[id].tsx" as={`/exams/${o.id}`}>
+          <Link
+            key={o.id}
+            href="/manage/exams/[id].tsx"
+            as={`/manage/exams/${o.id}`}
+          >
             <StyledLink>
               <StyledButtonBase component="div">
                 <ExamCard>
@@ -57,7 +61,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
         )
       })}
       <br />
-      <Link href="/exams/new">
+      <Link href="/manage/exams/new">
         <a>
           <Button fullWidth variant="outlined" color="primary">
             New exam

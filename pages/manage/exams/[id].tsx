@@ -1,6 +1,6 @@
 import React from "react"
 import { NextPage } from "next"
-import { Exam, fetchExam } from "../../services/api"
+import { Exam, fetchExam } from "../../../services/api"
 import {
   Typography,
   Card,
@@ -12,8 +12,8 @@ import { DateTime } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
 import styled from "styled-components"
 import Link from "next/link"
-import { withLoggedIn } from "../../contexes/LoginStateContext"
-import Layout from "../../components/Layout"
+import { withLoggedIn } from "../../../contexes/LoginStateContext"
+import Layout from "../../../components/Layout"
 
 interface PageProps {
   exam: Exam
@@ -34,7 +34,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   return (
     <Layout>
       <StyledBreadcrumbs aria-label="breadcrumb">
-        <Link href="/exams">
+        <Link href="/manage/exams">
           <a>Exams</a>
         </Link>
         <Typography color="textPrimary">{exam.name}</Typography>
@@ -80,7 +80,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
           </StyledCard>
         )
       })}
-      <Link href="/exams/[id]/edit" as={`/exams/${exam.id}/edit`}>
+      <Link href="/manage/exams/[id]/edit" as={`/manage/exams/${exam.id}/edit`}>
         <a>
           <Button variant="outlined" color="primary">
             Edit
