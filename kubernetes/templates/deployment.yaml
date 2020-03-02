@@ -35,10 +35,10 @@ spec:
           #   httpGet:
           #     path: /
           #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
           envFrom:
           - secretRef:
               name: exams-secret
