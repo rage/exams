@@ -13,14 +13,16 @@ const knex = Knex(knexConfig.development)
 Model.knex(knex)
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const authorization = req.headers.authorization
-    .toLowerCase()
-    .replace("bearer ", "")
-  const details = await userDetails(authorization)
-  if (!details.id) {
-    return res.status(403).json({ error: "Please log in" })
-  }
-  const admin = details.administrator
+  let admin = false
+  try {
+    const authorization = req.headers.authorization
+      .toLowerCase()
+      .replace("bearer ", "")
+
+    const details = await userDetails(authorization)
+
+    admin = details.administrator
+  } catch (e) {}
 
   try {
     if (req.method === "POST") {

@@ -90,3 +90,18 @@ export async function fetchExams(accessToken: string): Promise<SimpleExam[]> {
   })
   return res.data.exams
 }
+
+export async function startExam(
+  examId: string,
+  accessToken: string,
+): Promise<void> {
+  await client.post(
+    `/exams/${examId}/start`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  )
+}

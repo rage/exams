@@ -38,7 +38,7 @@ async function handleGet(
   admin: boolean,
 ) {
   try {
-    let query = Exam.query()
+    let query = Exam.query().withGraphJoined("exam_starts")
     if (admin) {
       query = query.withGraphJoined("exercises")
     }

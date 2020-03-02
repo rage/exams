@@ -7,6 +7,7 @@ import { DateTime } from "luxon"
 import { withLoggedIn } from "../../../../contexes/LoginStateContext"
 import Layout from "../../../../components/Layout"
 import ExamEditor from "../../../../components/ExamEditor"
+import getAccessToken from "../../../../lib/getAccessToken"
 
 const StyledBreadcrumbs = styled(Breadcrumbs)`
   margin-bottom: 1rem;
@@ -42,7 +43,7 @@ const Page = ({ exam }: PageProps) => {
 }
 
 Page.getInitialProps = async ctx => {
-  const exam = await fetchExam(ctx.query.id?.toString())
+  const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   return { exam }
 }
 

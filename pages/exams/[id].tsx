@@ -1,7 +1,9 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import Layout from "../../components/Layout"
-import { withLoggedIn } from "../../contexes/LoginStateContext"
-import { fetchExam, Exam } from "../../services/api"
+import LoginStateContext, {
+  withLoggedIn,
+} from "../../contexes/LoginStateContext"
+import { fetchExam, Exam, startExam } from "../../services/api"
 import { Parser, HtmlRenderer } from "commonmark"
 import { NextPage } from "next"
 import styled from "styled-components"
@@ -18,6 +20,7 @@ import {
 } from "@material-ui/core"
 import { DateTime } from "luxon"
 import getAccessToken from "../../lib/getAccessToken"
+import { Router } from "next/router"
 
 interface PageProps {
   exam: Exam
@@ -29,8 +32,10 @@ const StyledCard = styled(Card)`
 
 const Page: NextPage<PageProps> = ({ exam }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const { accessToken } = useContext(LoginStateContext)
   const reader = new Parser()
   const writer = new HtmlRenderer()
+
   return (
     <Layout>
       <Typography variant="h3" component="h1">
@@ -103,8 +108,9 @@ const Page: NextPage<PageProps> = ({ exam }) => {
             Peru
           </Button>
           <Button
-            onClick={() => {
+            onClick={async () => {
               setConfirmDialogOpen(false)
+              await startExam(exam.id, accessToken)
             }}
             color="primary"
             autoFocus
@@ -119,6 +125,23 @@ const Page: NextPage<PageProps> = ({ exam }) => {
 
 Page.getInitialProps = async ctx => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
+  const location = `/exams/${ctx.query.id?.toString()}/start`
+  // @ts-ignore
+  if (exam.exam_starts.length > 0) {
+    if (ctx.res) {
+      // Seems to be the version used by zeit
+      ctx.res.writeHead(302, {
+        Location: location,
+        // Add the content-type for SEO considerations
+        "Content-Type": "text/html; charset=utf-8",
+      })
+      ctx.res.end()
+      return
+    }
+
+    // @ts-ignore
+    Router.replace(location)
+  }
   return { exam }
 }
 

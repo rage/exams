@@ -7,6 +7,7 @@ export default class Exam extends Model {
 
   static get relationMappings() {
     const Exercise = require("./Exercise").default
+    const ExamStart = require("./ExamStart").default
 
     return {
       exercises: {
@@ -15,6 +16,14 @@ export default class Exam extends Model {
         join: {
           from: "exams.id",
           to: "exercises.exam_id",
+        },
+      },
+      exam_starts: {
+        relation: Model.HasManyRelation,
+        modelClass: ExamStart,
+        join: {
+          from: "exams.id",
+          to: "exam_starts.exam_id",
         },
       },
     }
