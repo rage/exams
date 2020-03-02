@@ -37,12 +37,13 @@ async function handleGet(
   res: NextApiResponse,
   admin: boolean,
 ) {
+  const id = req.query.id
   try {
     let query = Exam.query()
     if (admin) {
       query = query.withGraphJoined("exercises")
     }
-    const exam = await query.findById(req.query.id)
+    const exam = await query.findById(id)
     return res.status(200).json({ exam })
   } catch (e) {
     return res.status(500).json({ error: e.message })

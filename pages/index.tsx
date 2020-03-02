@@ -8,6 +8,7 @@ import { SimpleExam, fetchExams } from "../services/api"
 import Layout from "../components/Layout"
 import { withLoggedIn } from "../contexes/LoginStateContext"
 import getAccessToken from "../lib/getAccessToken"
+import { useTime } from "../hooks/useTime"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -29,34 +30,47 @@ const StyledLink = styled.a`
 `
 
 const Page: NextPage<PageProps> = ({ exams }) => {
+  const now = useTime()
+  const currentDateString = now.toLocaleString(DateTime.DATE_FULL)
   return (
     <Layout>
       <Typography variant="h3" component="h1">
-        Exams
+        Tämän päivän kokeet
       </Typography>
 
       <br />
 
-      {exams.map(o => {
-        return (
-          <Link key={o.id} href="/exams/[id].tsx" as={`/exams/${o.id}`}>
-            <StyledLink>
-              <StyledButtonBase component="div">
-                <ExamCard>
-                  <Typography variant="h5" component="h2">
-                    {o.name}
-                  </Typography>
-                  <Typography>
-                    {DateTime.fromISO(o.starts_at).toLocaleString(
-                      DateTime.DATE_FULL,
-                    )}
-                  </Typography>
-                </ExamCard>
-              </StyledButtonBase>
-            </StyledLink>
-          </Link>
+      {exams
+        .filter(
+          o =>
+            DateTime.fromISO(o.starts_at).toLocaleString(DateTime.DATE_FULL) ===
+            currentDateString,
         )
-      })}
+        .sort((o1, o2) =>
+          DateTime.fromISO(o1.starts_at)
+            .diff(DateTime.fromISO(o2.starts_at))
+            .as("seconds"),
+        )
+        .map(o => {
+          return (
+            <Link key={o.id} href="/exams/[id].tsx" as={`/exams/${o.id}`}>
+              <StyledLink>
+                <StyledButtonBase component="div">
+                  <ExamCard>
+                    <Typography variant="h5" component="h2">
+                      {o.name}
+                    </Typography>
+                    <Typography>
+                      {DateTime.fromISO(o.starts_at).toLocaleString(
+                        DateTime.DATE_FULL,
+                      )}
+                    </Typography>
+                  </ExamCard>
+                </StyledButtonBase>
+              </StyledLink>
+            </Link>
+          )
+        })}
     </Layout>
   )
 }

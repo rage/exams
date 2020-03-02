@@ -74,12 +74,15 @@ const handleGet = async (
   res: NextApiResponse,
   userDetails: any,
 ) => {
-  const existingStarts = await ExamStart.query()
-    .where({
-      user_id: userDetails.id,
-      exam_id: req.query.id.toString(),
-    })
-    .limit(1)
-
-  res.status(200).json({ exam_starts: existingStarts })
+  try {
+    const existingStarts = await ExamStart.query()
+      .where({
+        user_id: userDetails.id,
+        exam_id: req.query.id.toString(),
+      })
+      .limit(1)
+    return res.status(200).json({ exam_starts: existingStarts })
+  } catch (e) {
+    return res.status(200).json({ exam_starts: [] })
+  }
 }
