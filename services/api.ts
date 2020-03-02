@@ -96,7 +96,7 @@ export async function startExam(
   accessToken: string,
 ): Promise<void> {
   await client.post(
-    `/exams/${examId}/start`,
+    `/exams/${examId}/starts`,
     {},
     {
       headers: {
@@ -104,4 +104,28 @@ export async function startExam(
       },
     },
   )
+}
+
+export async function fetchExamStarts(
+  examId: string,
+  accessToken: string,
+): Promise<any> {
+  const res = await client.get(`/exams/${examId}/starts`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return res.data.exam_starts
+}
+
+export async function fetchExamExercises(
+  examId: string,
+  accessToken: string,
+): Promise<void> {
+  const res = await client.get(`/exams/${examId}/exercises`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+  return res.data.exercises
 }

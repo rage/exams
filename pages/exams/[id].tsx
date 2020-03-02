@@ -3,7 +3,7 @@ import Layout from "../../components/Layout"
 import LoginStateContext, {
   withLoggedIn,
 } from "../../contexes/LoginStateContext"
-import { fetchExam, Exam, startExam } from "../../services/api"
+import { fetchExam, Exam, startExam, fetchExamStarts } from "../../services/api"
 import { Parser, HtmlRenderer } from "commonmark"
 import { NextPage } from "next"
 import styled from "styled-components"
@@ -20,7 +20,8 @@ import {
 } from "@material-ui/core"
 import { DateTime } from "luxon"
 import getAccessToken from "../../lib/getAccessToken"
-import { Router } from "next/router"
+import { Router, useRouter } from "next/router"
+import { useTime } from "../../hooks/useTime"
 
 interface PageProps {
   exam: Exam
@@ -35,6 +36,17 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   const { accessToken } = useContext(LoginStateContext)
   const reader = new Parser()
   const writer = new HtmlRenderer()
+  const router = useRouter()
+
+  const startTime = DateTime.fromISO(exam.starts_at)
+  const now = useTime()
+  const endTime = DateTime.fromISO(exam.ends_at)
+
+  let canStart = true
+
+  if (now < startTime || now > endTime) {
+    canStart = false
+  }
 
   return (
     <Layout>
@@ -75,13 +87,14 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         onClick={() => {
           setConfirmDialogOpen(true)
         }}
+        disabled={!canStart}
         variant="contained"
         color="primary"
       >
         Aloita koe
       </Button>
       <Dialog
-        open={confirmDialogOpen}
+        open={confirmDialogOpen && canStart}
         onClose={() => {
           setConfirmDialogOpen(false)
         }}
@@ -111,6 +124,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
             onClick={async () => {
               setConfirmDialogOpen(false)
               await startExam(exam.id, accessToken)
+              router.push(`/exams/${router.query.id?.toString()}/start`)
             }}
             color="primary"
             autoFocus
@@ -126,8 +140,12 @@ const Page: NextPage<PageProps> = ({ exam }) => {
 Page.getInitialProps = async ctx => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   const location = `/exams/${ctx.query.id?.toString()}/start`
+  const examStarts = await fetchExamStarts(
+    ctx.query.id?.toString(),
+    getAccessToken(ctx),
+  )
   // @ts-ignore
-  if (exam.exam_starts.length > 0) {
+  if (examStarts.length > 0) {
     if (ctx.res) {
       // Seems to be the version used by zeit
       ctx.res.writeHead(302, {

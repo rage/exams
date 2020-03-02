@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 const { Model } = require("objection")
 import { userDetails } from "../../../../../services/moocfi"
 import ExamStart from "../../../../../backend/models/ExamStart"
+import Exercise from "../../../../../backend/models/Exercise"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
@@ -22,15 +23,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   admin = details.administrator
 
   try {
-    if (req.method === "POST") {
-      return handlePost(req, res, details)
+    if (req.method === "GET") {
+      return handleGet(req, res, details)
     }
   } catch (e) {
     return res.status(500).json({ error: e.message })
   }
 }
 
-const handlePost = async (
+const handleGet = async (
   req: NextApiRequest,
   res: NextApiResponse,
   userDetails: any,
@@ -41,14 +42,13 @@ const handlePost = async (
       exam_id: req.query.id.toString(),
     })
     .limit(1)
-  if (existingStarts.length > 0) {
-    return res.status(403).json({ error: "You have already started this exam" })
+  if (existingStarts.length < 1) {
+    return res
+      .status(403)
+      .json({ error: "Please start the exam in order to see the exercises." })
   }
-  await ExamStart.query()
-    .allowGraph("[user_id, exam_id]")
-    .insertGraph({
-      // @ts-ignore
-      user_id: userDetails.id,
-      exam_id: req.query.id.toString(),
-    })
+  const exercises = await Exercise.query().where({
+    exam_id: req.query.id.toString(),
+  })
+  res.status(200).json({ exercises })
 }
