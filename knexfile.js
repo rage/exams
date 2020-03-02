@@ -15,7 +15,11 @@ module.exports = {
   production: {
     client: "postgresql",
     connection: {
-      database: "exams",
+      database: process.env.POSTGRES_DATABASE,
+      host: process.env.POSTGRES_HOST,
+      port: process.env.POSTGRES_PORT,
+      username: process.env.POSTGRES_USERNAME,
+      password: process.env.POSTGRES_PASSWORD,
     },
     pool: {
       min: 2,

@@ -1,6 +1,8 @@
 import Axios from "axios"
 
-const client = Axios.create({ baseURL: "http://localhost:3000/api/v0" })
+const BASE_URL = process.env.BASE_URL || "http://localhost:3000"
+
+const client = Axios.create({ baseURL: `${BASE_URL}/api/v0` })
 
 export interface NewExam {
   name: string
