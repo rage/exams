@@ -10,35 +10,49 @@ interface SignInProps {
   email: string
   password: string
   setAccessToken: (token: string | undefined) => void
+  setAdmin: (admin: boolean) => void
 }
 
 export const signIn = async ({
   email,
   password,
   setAccessToken,
+  setAdmin,
 }: SignInProps) => {
   const res = await tmcClient.authenticate({ username: email, password })
   const details = await userDetails(res.accessToken)
 
-  document.cookie = `access_token=${res.accessToken};path=/`
+  const now = new Date()
+  const time = now.getTime()
+  const expireTime = time + 1000 * 36000 * 60
+  now.setTime(expireTime)
 
-  document.cookie = `admin=${details.administrator};path=/`
+  document.cookie = `access_token=${
+    res.accessToken
+  };expires=${now.toUTCString()};path=/`
+
+  document.cookie = `admin=${
+    details.administrator
+  };expires=${now.toUTCString()};path=/`
 
   setAccessToken(res.accessToken)
+  setAdmin(details.administrator)
 
   return res
 }
 
 interface SignOutProps {
   setAccessToken: (token: string | undefined) => void
+  setAdmin: (admin: boolean) => void
 }
 
-export const signOut = async ({ setAccessToken }: SignOutProps) => {
+export const signOut = async ({ setAccessToken, setAdmin }: SignOutProps) => {
   document.cookie =
     "access_token" + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/"
   document.cookie = "admin" + "=; expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/"
   // Give browser a moment to react to the change
   setAccessToken(undefined)
+  setAdmin(false)
 }
 
 export async function userDetails(accessToken: string) {

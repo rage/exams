@@ -23,7 +23,7 @@ function SignIn() {
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
   const [error, setError] = useState(false)
-  const { setAccessToken } = useContext(LoginStateContext)
+  const { setAccessToken, setAdmin } = useContext(LoginStateContext)
 
   const emailFieldRef = useRef<HTMLInputElement>(null)
   const passwordFieldRef = useRef<HTMLInputElement>(null)
@@ -100,7 +100,7 @@ function SignIn() {
           onClick={async e => {
             e.preventDefault()
             try {
-              await signIn({ email, password, setAccessToken })
+              await signIn({ email, password, setAccessToken, setAdmin })
             } catch {
               setError(true)
             }

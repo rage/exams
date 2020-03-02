@@ -28,7 +28,9 @@ const MainNavigationLink = styled.a`
 `
 
 const TopBar = () => {
-  const { loggedIn, admin, setAccessToken } = useContext(LoginStateContext)
+  const { loggedIn, admin, setAccessToken, setAdmin } = useContext(
+    LoginStateContext,
+  )
   return (
     <AppBar position="static">
       <Toolbar>
@@ -48,7 +50,7 @@ const TopBar = () => {
           <Button
             variant="contained"
             onClick={() => {
-              signOut({ setAccessToken })
+              signOut({ setAccessToken, setAdmin })
             }}
           >
             Kirjaudu ulos
