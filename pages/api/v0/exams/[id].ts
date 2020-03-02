@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 import Exam from "../../../../backend/models/Exam"
 const { Model } = require("objection")
 import { transaction } from "objection"
+import { userDetails } from "../../../../services/moocfi"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../knexfile")
@@ -12,28 +13,50 @@ const knex = Knex(knexConfig.development)
 Model.knex(knex)
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const authorization = req.headers.authorization
+    .toLowerCase()
+    .replace("bearer ", "")
+  const details = await userDetails(authorization)
+  if (!details.id) {
+    return res.status(403).json({ error: "Please log in" })
+  }
+  const admin = details.administrator
+
   if (req.method === "GET") {
-    return handleGet(req, res)
+    return handleGet(req, res, admin)
   }
   if (req.method === "PATCH") {
-    return handlePatch(req, res)
+    return handlePatch(req, res, admin)
   }
 
   return res.status(404).json({ message: "wat" })
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse) {
+async function handleGet(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  admin: boolean,
+) {
   try {
-    const exam = await Exam.query()
-      .withGraphJoined("exercises")
-      .findById(req.query.id)
+    let query = Exam.query()
+    if (admin) {
+      query = query.withGraphJoined("exercises")
+    }
+    const exam = await query.findById(req.query.id)
     return res.status(200).json({ exam })
   } catch (e) {
     return res.status(500).json({ error: e.message })
   }
 }
 
-async function handlePatch(req: NextApiRequest, res: NextApiResponse) {
+async function handlePatch(
+  req: NextApiRequest,
+  res: NextApiResponse,
+  admin: boolean,
+) {
+  if (!admin) {
+    return res.status(403).json({ error: "Only admins can do that" })
+  }
   try {
     const id = req.query.id
     const exam = req.body.exam

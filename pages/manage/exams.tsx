@@ -7,6 +7,7 @@ import styled from "styled-components"
 import Link from "next/link"
 import { withLoggedIn } from "../../contexes/LoginStateContext"
 import Layout from "../../components/Layout"
+import getAccessToken from "../../lib/getAccessToken"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -73,7 +74,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
 }
 
 Page.getInitialProps = async ctx => {
-  const exams = await fetchExams()
+  const exams = await fetchExams(getAccessToken(ctx))
   return { exams }
 }
 

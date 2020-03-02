@@ -7,6 +7,7 @@ export interface LoginStateContextValue {
   setAccessToken: (value: string | undefined) => void
   setAdmin: (value: boolean) => void
   admin: boolean
+  accessToken: string
 }
 
 const defaultValue: LoginStateContextValue = {
@@ -18,6 +19,7 @@ const defaultValue: LoginStateContextValue = {
   setAdmin: () => {
     console.warn("Set accesstoken called without withLoggedIn")
   },
+  accessToken: "",
 }
 
 export const withLoggedIn = PageComponent => {
@@ -31,6 +33,7 @@ export const withLoggedIn = PageComponent => {
           admin: !!currentAdmin,
           setAccessToken: setCurrentToken,
           setAdmin: setCurrentAdmin,
+          accessToken: accessToken,
         }}
       >
         <PageComponent {...pageProps} />

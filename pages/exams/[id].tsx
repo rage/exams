@@ -17,6 +17,7 @@ import {
   Card,
 } from "@material-ui/core"
 import { DateTime } from "luxon"
+import getAccessToken from "../../lib/getAccessToken"
 
 interface PageProps {
   exam: Exam
@@ -117,7 +118,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
 }
 
 Page.getInitialProps = async ctx => {
-  const exam = await fetchExam(ctx.query.id?.toString())
+  const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   return { exam }
 }
 

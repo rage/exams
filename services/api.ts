@@ -38,22 +38,55 @@ export interface Exercise extends NewExercise {
   id: string
 }
 
-export async function createExam(exam: NewExam): Promise<Exam> {
-  const res = await client.post("/exams", { exam })
+export async function createExam(
+  exam: NewExam,
+  accessToken: string,
+): Promise<Exam> {
+  const res = await client.post(
+    "/exams",
+    { exam },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  )
   return res.data.exam
 }
 
-export async function updateExam(exam: Exam): Promise<Exam> {
-  const res = await client.patch(`/exams/${exam.id}`, { exam })
+export async function updateExam(
+  exam: Exam,
+  accessToken: string,
+): Promise<Exam> {
+  const res = await client.patch(
+    `/exams/${exam.id}`,
+    { exam },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  )
   return res.data.exam
 }
 
-export async function fetchExam(id: string): Promise<Exam> {
-  const res = await client.get(`/exams/${id}`)
+export async function fetchExam(
+  id: string,
+  accessToken: string,
+): Promise<Exam> {
+  const res = await client.get(`/exams/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
   return res.data.exam
 }
 
-export async function fetchExams(): Promise<SimpleExam[]> {
-  const res = await client.get(`/exams`)
+export async function fetchExams(accessToken: string): Promise<SimpleExam[]> {
+  const res = await client.get(`/exams`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
   return res.data.exams
 }

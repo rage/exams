@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import {
   Typography,
   TextField,
@@ -21,6 +21,7 @@ import { createExam, Exercise, updateExam } from "../services/api"
 import Link from "next/link"
 import ExerciseEditor from "./ExerciseEditor"
 import MarkdownEditor from "./MarkdownEditor"
+import LoginStateContext from "../contexes/LoginStateContext"
 
 const Row = styled.div`
   margin-bottom: 1rem;
@@ -105,6 +106,7 @@ const ExamEditor = ({
   const [error, setError] = useState(null)
   const [errorData, setErrorData] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const { accessToken } = useContext(LoginStateContext)
 
   const isValid = name !== ""
 
@@ -254,24 +256,30 @@ const ExamEditor = ({
             try {
               let res = null
               if (isEdit) {
-                res = await updateExam({
-                  id,
-                  name: name,
-                  starts_at: startsAt.toISOString(),
-                  ends_at: endsAt.toISOString(),
-                  exercises: exerciseArray,
-                  time_minutes: timeMinutes,
-                  pre_instructions: preExamInstructions,
-                })
+                res = await updateExam(
+                  {
+                    id,
+                    name: name,
+                    starts_at: startsAt.toISOString(),
+                    ends_at: endsAt.toISOString(),
+                    exercises: exerciseArray,
+                    time_minutes: timeMinutes,
+                    pre_instructions: preExamInstructions,
+                  },
+                  accessToken,
+                )
               } else {
-                res = await createExam({
-                  name: name,
-                  starts_at: startsAt,
-                  ends_at: endsAt,
-                  exercises: exerciseArray,
-                  time_minutes: timeMinutes,
-                  pre_instructions: preExamInstructions,
-                })
+                res = await createExam(
+                  {
+                    name: name,
+                    starts_at: startsAt,
+                    ends_at: endsAt,
+                    exercises: exerciseArray,
+                    time_minutes: timeMinutes,
+                    pre_instructions: preExamInstructions,
+                  },
+                  accessToken,
+                )
               }
               router.push(`/manage/exams/${res.id}`)
             } catch (e) {
