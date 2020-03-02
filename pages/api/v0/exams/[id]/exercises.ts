@@ -6,7 +6,7 @@ import Exercise from "../../../../../backend/models/Exercise"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
-const knex = Knex(knexConfig.development)
+const knex = Knex(process.env.NODE_ENV === "production" ? knexConfig.production : knexConfig.development)
 // Bind all Models to the knex instance. You only
 // need to do this once before you use any of
 // your model classes.

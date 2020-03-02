@@ -1,6 +1,6 @@
 import React from "react"
 import { NextPage } from "next"
-import { Typography, Card, Button, ButtonBase } from "@material-ui/core"
+import { Typography, Card, Button, ButtonBase, NoSsr } from "@material-ui/core"
 import { DateTime } from "luxon"
 import styled from "styled-components"
 import Link from "next/link"
@@ -61,9 +61,11 @@ const Page: NextPage<PageProps> = ({ exams }) => {
                       {o.name}
                     </Typography>
                     <Typography>
-                      {DateTime.fromISO(o.starts_at).toLocaleString(
-                        DateTime.DATE_FULL,
-                      )}
+                      <NoSsr>
+                        {DateTime.fromISO(o.starts_at).toLocaleString(
+                          DateTime.DATE_FULL,
+                        )}
+                      </NoSsr>
                     </Typography>
                   </ExamCard>
                 </StyledButtonBase>
