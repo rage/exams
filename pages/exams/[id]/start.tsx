@@ -16,6 +16,7 @@ import Alert from "@material-ui/lab/Alert"
 
 const ExerciseCard = styled(Card)`
   padding: 1rem;
+  margin-bottom: 2rem;
 `
 
 const MINUTE_IN_MS = 60000
@@ -90,6 +91,20 @@ const Page = ({ exam, examExercises, examStarts }) => {
         })}
 
       {!onGoing && <Typography>Koeaika on päättynyt.</Typography>}
+
+      <br />
+
+      <Typography variant="h4" component="h2">
+        Edellisen sivun ohjeistus uudestaan
+      </Typography>
+      <br />
+      <ExerciseCard>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: writer.render(reader.parse(exam.pre_instructions)),
+          }}
+        />
+      </ExerciseCard>
     </Layout>
   )
 }
