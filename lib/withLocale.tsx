@@ -21,12 +21,12 @@ export default (WrappedPage: NextPage<any>) => {
   }
 
   WithLocale.getInitialProps = async ctx => {
+    if (typeof ctx.query.lang !== "string" || !isLocale(ctx.query.lang)) {
+      return { locale: null }
+    }
     let pageProps = {}
     if (WrappedPage.getInitialProps) {
       pageProps = await WrappedPage.getInitialProps(ctx)
-    }
-    if (typeof ctx.query.lang !== "string" || !isLocale(ctx.query.lang)) {
-      return { ...pageProps, locale: undefined }
     }
     return { ...pageProps, locale: ctx.query.lang }
   }
