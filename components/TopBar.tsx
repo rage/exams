@@ -4,6 +4,9 @@ import { signOut } from "../services/moocfi"
 import LoginStateContext from "../contexes/LoginStateContext"
 import styled from "styled-components"
 import Link from "next/link"
+import { useRouter } from "next/router"
+import { LocaleContext } from "../contexes/LocaleContext"
+import useTranslator from "../hooks/useTranslator"
 
 const EmptySpace = styled.div`
   flex: 1;
@@ -31,20 +34,40 @@ const TopBar = () => {
   const { loggedIn, admin, setAccessToken, setAdmin } = useContext(
     LoginStateContext,
   )
+  const { locale } = useContext(LocaleContext)
+
+  const router = useRouter()
+  const t = useTranslator()
+
+  const alternativeLocale = locale === "fi" ? "en" : "fi"
+  const changeLocalePath = router.asPath.replace(locale, alternativeLocale)
+  const changeLoccalePathName = router.pathname.replace(
+    locale,
+    alternativeLocale,
+  )
+
   return (
     <AppBar position="static">
       <Toolbar>
         <Link href="/">
           <MainNavigationLink>
-            <Typography variant="h6">MOOC.fi kokeet</Typography>
+            <Typography variant="h6">{t("site-name")}</Typography>
           </MainNavigationLink>
         </Link>
         {admin && (
-          <Link href="/manage/exams">
+          <Link passHref href="/manage/exams">
             <NavigationLink>Manage exams</NavigationLink>
           </Link>
         )}
         <EmptySpace />
+        <Link
+          shallow={true}
+          passHref
+          href={changeLoccalePathName}
+          as={changeLocalePath}
+        >
+          <NavigationLink>{t("switch-language")}</NavigationLink>
+        </Link>
         {admin && <StyledChip label="Admin" />}
         {loggedIn && (
           <Button
@@ -53,7 +76,7 @@ const TopBar = () => {
               signOut({ setAccessToken, setAdmin })
             }}
           >
-            Kirjaudu ulos
+            {t("log-out")}
           </Button>
         )}
       </Toolbar>

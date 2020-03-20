@@ -2,8 +2,7 @@ import React from "react"
 import { NextPage } from "next"
 import Error from "next/error"
 import { getDisplayName } from "next/dist/next-server/lib/utils"
-import { isLocale, Locale } from "../translations/types"
-import { LocaleProvider } from "../context/LocaleContext"
+import { Locale, LocaleProvider, isLocale } from "../contexes/LocaleContext"
 
 interface LangProps {
   locale?: Locale

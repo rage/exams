@@ -1,9 +1,4 @@
 import React, { useState, useContext } from "react"
-import Layout from "../../components/Layout"
-import LoginStateContext, {
-  withLoggedIn,
-} from "../../contexes/LoginStateContext"
-import { fetchExam, Exam, startExam, fetchExamStarts } from "../../services/api"
 import { Parser, HtmlRenderer } from "commonmark"
 import { NextPage } from "next"
 import styled from "styled-components"
@@ -19,9 +14,22 @@ import {
   Card,
 } from "@material-ui/core"
 import { DateTime } from "luxon"
-import getAccessToken from "../../lib/getAccessToken"
 import { Router, useRouter } from "next/router"
-import { useTime } from "../../hooks/useTime"
+import LoginStateContext, {
+  withLoggedIn,
+} from "../../../contexes/LoginStateContext"
+import { useTime } from "../../../hooks/useTime"
+import Layout from "../../../components/Layout"
+import {
+  startExam,
+  fetchExam,
+  fetchExamStarts,
+  Exam,
+} from "../../../services/api"
+import getAccessToken from "../../../lib/getAccessToken"
+import withLocale from "../../../lib/withLocale"
+import useTranslator from "../../../hooks/useTranslator"
+import { LocaleContext } from "../../../contexes/LocaleContext"
 
 interface PageProps {
   exam: Exam
@@ -34,6 +42,8 @@ const StyledCard = styled(Card)`
 const Page: NextPage<PageProps> = ({ exam }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const { accessToken } = useContext(LoginStateContext)
+  const t = useTranslator()
+  const { locale } = useContext(LocaleContext)
   const reader = new Parser()
   const writer = new HtmlRenderer()
   const router = useRouter()
@@ -51,27 +61,26 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   return (
     <Layout>
       <Typography variant="h3" component="h1">
-        Koe: {exam.name}
+        {t("exam-title")}: {exam.name}
       </Typography>
       <br />
       <Typography>
-        Kokeen voi aloittaa aikaisintaan:{" "}
+        {t("exam-can-be-started-at")}:{" "}
         {DateTime.fromISO(exam.starts_at)
-          .setLocale("fi-FI")
+          .setLocale(locale)
           .toLocaleString(DateTime.DATETIME_FULL)}
         .
       </Typography>
       <Typography>
-        Koe täytyy olla tehtynä viimeistään:{" "}
+        {t("exam-must-be-completed-before")}:{" "}
         {DateTime.fromISO(exam.ends_at)
-          .setLocale("fi-FI")
+          .setLocale(locale)
           .toLocaleString(DateTime.DATETIME_FULL)}
         .
       </Typography>
       <br />
       <Typography>
-        Kun aloitat kokeen, sinulla on {exam.time_minutes} minuuttia aikaa tehdä
-        se.
+        {t("start-exam-time-1")} {exam.time_minutes} {t("start-exam-time-2")}
       </Typography>
       <br />
 
@@ -91,7 +100,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         variant="contained"
         color="primary"
       >
-        Aloita koe
+        {t("start-exam")}
       </Button>
       <Dialog
         open={confirmDialogOpen && canStart}
@@ -102,13 +111,12 @@ const Page: NextPage<PageProps> = ({ exam }) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Haluatko varmasti aloittaa kokeen?"}
+          {t("are-you-sure-you-want-to-start-the-exam")}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Kun olet aloittanut kokeen, et voi enää perua aloittamista.
-            Aloittamisen jälkeen sinulla on {exam.time_minutes} minuuttia aikaa
-            tehdä koetta.
+            {t("start-exam-warning-1")} {exam.time_minutes}{" "}
+            {t("start-exam-warning-2")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -118,18 +126,20 @@ const Page: NextPage<PageProps> = ({ exam }) => {
             }}
             color="primary"
           >
-            Peru
+            {t("cancel")}
           </Button>
           <Button
             onClick={async () => {
               setConfirmDialogOpen(false)
               await startExam(exam.id, accessToken)
-              router.push(`/exams/${router.query.id?.toString()}/start`)
+              router.push(
+                `/${locale}/exams/${router.query.id?.toString()}/start`,
+              )
             }}
             color="primary"
             autoFocus
           >
-            Aloita koe
+            {t("start-exam")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -139,7 +149,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
 
 Page.getInitialProps = async ctx => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
-  const location = `/exams/${ctx.query.id?.toString()}/start`
+  const location = `/${ctx.query.lang?.toString()}/exams/${ctx.query.id?.toString()}/start`
   const examStarts = await fetchExamStarts(
     ctx.query.id?.toString(),
     getAccessToken(ctx),
@@ -163,4 +173,4 @@ Page.getInitialProps = async ctx => {
   return { exam }
 }
 
-export default withLoggedIn(Page)
+export default withLocale(withLoggedIn(Page))

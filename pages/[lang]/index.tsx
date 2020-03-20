@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { NextPage } from "next"
 import { Typography, Card, Button, ButtonBase, NoSsr } from "@material-ui/core"
 import { DateTime } from "luxon"
@@ -9,6 +9,9 @@ import { withLoggedIn } from "../../contexes/LoginStateContext"
 import getAccessToken from "../../lib/getAccessToken"
 import { useTime } from "../../hooks/useTime"
 import Layout from "../../components/Layout"
+import withLocale from "../../lib/withLocale"
+import useTranslator from "../../hooks/useTranslator"
+import { LocaleContext } from "../../contexes/LocaleContext"
 
 interface PageProps {
   exams: SimpleExam[]
@@ -30,12 +33,14 @@ const StyledLink = styled.a`
 `
 
 const Page: NextPage<PageProps> = ({ exams }) => {
+  const t = useTranslator()
+  const { locale } = useContext(LocaleContext)
   const now = useTime()
   const currentDateString = now.toLocaleString(DateTime.DATE_FULL)
   return (
     <Layout>
       <Typography variant="h3" component="h1">
-        Tämän päivän kokeet
+        {t("exams-today")}
       </Typography>
 
       <br />
@@ -53,7 +58,11 @@ const Page: NextPage<PageProps> = ({ exams }) => {
         )
         .map(o => {
           return (
-            <Link key={o.id} href="/exams/[id].tsx" as={`/exams/${o.id}`}>
+            <Link
+              key={o.id}
+              href={`${locale}/exams/[id].tsx`}
+              as={`${locale}/exams/${o.id}`}
+            >
               <StyledLink>
                 <StyledButtonBase component="div">
                   <ExamCard>
@@ -82,4 +91,4 @@ Page.getInitialProps = async ctx => {
   return { exams }
 }
 
-export default withLoggedIn(Page)
+export default withLocale(withLoggedIn(Page))

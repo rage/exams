@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import {
   FormControl,
-  InputLabel,
-  Input,
   FormHelperText,
   Link,
   Button,
@@ -14,6 +12,7 @@ import { useContext } from "react"
 import styled from "styled-components"
 import { signIn } from "../services/moocfi"
 import LoginStateContext from "../contexes/LoginStateContext"
+import useTranslator from "../hooks/useTranslator"
 
 const StyledForm = styled.form`
   padding: 1em;
@@ -24,11 +23,10 @@ function SignIn() {
   const [email, setEmail] = useState("")
   const [error, setError] = useState(false)
   const { setAccessToken, setAdmin } = useContext(LoginStateContext)
+  const t = useTranslator()
 
   const emailFieldRef = useRef<HTMLInputElement>(null)
   const passwordFieldRef = useRef<HTMLInputElement>(null)
-
-  let errorTimeout: number | null = null
 
   useEffect(() => {
     const inputFieldSetter = () => {
@@ -51,15 +49,17 @@ function SignIn() {
   return (
     <>
       <Typography variant="h4" component="h1">
-        Kirjaudu sisään MOOC.fi käyttäjätunnuksillasi
+        {t("log-in-with-moocfi-account")}
       </Typography>
       <br />
-      <Typography>Käytä samaa käyttäjätunnusta kuin kurssilla.</Typography>
+      <Typography>
+        {t("use-same-account-that-you-used-in-the-course")}
+      </Typography>
       <br />
       <StyledForm>
         <FormControl required fullWidth error={error}>
           <TextField
-            label="Sähköpostiosoite tai käyttäjänimi"
+            label={t("email-or-username")}
             variant="outlined"
             id="email"
             name="email"
@@ -73,7 +73,7 @@ function SignIn() {
         </FormControl>
         <FormControl margin="normal" required fullWidth error={error}>
           <TextField
-            label="Salasana"
+            label={t("password")}
             variant="outlined"
             name="password"
             type="password"
@@ -86,7 +86,7 @@ function SignIn() {
             }}
           />
           <FormHelperText error={error}>
-            {error && "Sisäänkirjautuminen ei onnistunut"}
+            {error && t("logging-in-was-not-successful")}
           </FormHelperText>
         </FormControl>
 
@@ -106,7 +106,7 @@ function SignIn() {
             }
           }}
         >
-          Kirjaudu sisään
+          {t("log-in")}
         </Button>
         <br />
         <br />
@@ -115,7 +115,7 @@ function SignIn() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Unohdin salasanani
+          {t("i-forgot-my-password")}
         </Link>
       </StyledForm>
     </>

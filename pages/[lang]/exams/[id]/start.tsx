@@ -1,18 +1,20 @@
 import React from "react"
-import Layout from "../../../components/Layout"
-import { withLoggedIn } from "../../../contexes/LoginStateContext"
 import { Typography, Card } from "@material-ui/core"
+import { DateTime, Duration } from "luxon"
+import { Parser, HtmlRenderer } from "commonmark"
+import styled from "styled-components"
+import Alert from "@material-ui/lab/Alert"
+import { useTime } from "../../../../hooks/useTime"
+import Layout from "../../../../components/Layout"
 import {
   fetchExam,
   fetchExamExercises,
   fetchExamStarts,
-} from "../../../services/api"
-import getAccessToken from "../../../lib/getAccessToken"
-import { DateTime, Duration } from "luxon"
-import { Parser, HtmlRenderer } from "commonmark"
-import styled from "styled-components"
-import { useTime } from "../../../hooks/useTime"
-import Alert from "@material-ui/lab/Alert"
+} from "../../../../services/api"
+import getAccessToken from "../../../../lib/getAccessToken"
+import { withLoggedIn } from "../../../../contexes/LoginStateContext"
+import withLocale from "../../../../lib/withLocale"
+import useTranslator from "../../../../hooks/useTranslator"
 
 const ExerciseCard = styled(Card)`
   padding: 1rem;
@@ -22,6 +24,7 @@ const ExerciseCard = styled(Card)`
 const MINUTE_IN_MS = 60000
 
 const Page = ({ exam, examExercises, examStarts }) => {
+  const t = useTranslator()
   const reader = new Parser()
   const writer = new HtmlRenderer()
   const startTime = DateTime.fromISO(examStarts[0].created_at).setLocale(
@@ -48,30 +51,33 @@ const Page = ({ exam, examExercises, examStarts }) => {
       </Typography>
       <br />
       <Typography variant="h5" component="p">
-        Olet aloittanut kokeen.
+        {t("you-have-started-the-exam")}
       </Typography>
 
       {remaining > 0 && remaining < 10 && (
         <>
           <br />
           <Alert severity="warning">
-            Koeaikaa on jäljellä alle {Math.ceil(remaining)} minuuttia.
-            Varmistathan että olet palauttanut kaikki tehtävät.
+            {t("time-remaining-warning-1")} {Math.ceil(remaining)}{" "}
+            {t("time-remaining-warning-2")}
           </Alert>
           <br />
         </>
       )}
       <br />
       <Typography>
-        Aloitit kokeen: {startTime.toLocaleString(DateTime.TIME_24_SIMPLE)}.
+        {t("exam-started-at")}:{" "}
+        {startTime.toLocaleString(DateTime.TIME_24_SIMPLE)}.
       </Typography>
-      <Typography>Koeaikaa yhteensä: {exam.time_minutes} minuuttia.</Typography>
       <Typography>
-        Koeaika loppuu: {endTime.toLocaleString(DateTime.TIME_24_SIMPLE)}.
+        {t("total-exam-time")}: {exam.time_minutes} {t("minutes")}.
+      </Typography>
+      <Typography>
+        {t("exam-ends-at")}: {endTime.toLocaleString(DateTime.TIME_24_SIMPLE)}.
       </Typography>
       <br />
       <Typography variant="h4" component="h2">
-        Tehtävät
+        {t("exercises-title")}
       </Typography>
       <br />
       {onGoing &&
@@ -79,7 +85,7 @@ const Page = ({ exam, examExercises, examStarts }) => {
           return (
             <ExerciseCard key={o.id}>
               <Typography variant="h5" component="h3">
-                Tehtävä {i + 1}
+                {t("exercise-title")} {i + 1}
               </Typography>
               <div
                 dangerouslySetInnerHTML={{
@@ -90,12 +96,12 @@ const Page = ({ exam, examExercises, examStarts }) => {
           )
         })}
 
-      {!onGoing && <Typography>Koeaika on päättynyt.</Typography>}
+      {!onGoing && <Typography>{t("exam-has-ended")}</Typography>}
 
       <br />
 
       <Typography variant="h4" component="h2">
-        Edellisen sivun ohjeistus uudestaan
+        {t("instructions-from-previous page")}
       </Typography>
       <br />
       <ExerciseCard>
@@ -123,4 +129,4 @@ Page.getInitialProps = async ctx => {
   return { exam, examExercises, examStarts }
 }
 
-export default withLoggedIn(Page)
+export default withLocale(withLoggedIn(Page))

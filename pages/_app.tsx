@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import theme from "../lib/theme"
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 import LuxonUtils from "@date-io/luxon"
+import useTranslator from "../hooks/useTranslator"
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -22,7 +23,7 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>Kokeet</title>
+          <title>Exams</title>
           <meta
             name="viewport"
             content="minimum-scale=1, initial-scale=1, width=device-width"
