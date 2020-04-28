@@ -1,5 +1,5 @@
 import React from "react"
-import { Typography, Card } from "@material-ui/core"
+import { Typography, Card, TextField } from "@material-ui/core"
 import { DateTime, Duration } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
 import styled from "styled-components"
@@ -92,6 +92,16 @@ const Page = ({ exam, examExercises, examStarts }) => {
                   __html: writer.render(reader.parse(o.content)),
                 }}
               />
+              {o.type === "essay" && (
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={10}
+                  rowsMax={100}
+                  label={t("essay-field-label")}
+                />
+              )}
             </ExerciseCard>
           )
         })}

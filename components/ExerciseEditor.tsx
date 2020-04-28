@@ -7,6 +7,10 @@ import {
   Tabs,
   Card,
   Paper,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core"
 import styled from "styled-components"
 import MarkdownEditor from "./MarkdownEditor"
@@ -27,11 +31,17 @@ const ExerciseCardTitleContainer = styled.div`
   margin-bottom: 0.25rem;
 `
 
+const StyledFormControl = styled(FormControl)`
+  margin-bottom: 1rem;
+  width: 100%;
+`
+
 export interface ExerciseEditorProps {
   exerciseNumber: number
   onDelete: () => any
   onChange: (e: any) => any
   text: string
+  type: string
 }
 
 const ExerciseEditor = ({
@@ -39,6 +49,7 @@ const ExerciseEditor = ({
   onDelete,
   onChange,
   text,
+  type,
 }: ExerciseEditorProps) => {
   return (
     <ExerciseCard>
@@ -50,7 +61,27 @@ const ExerciseEditor = ({
           Remove
         </DeleteButton>
       </ExerciseCardTitleContainer>
-      <MarkdownEditor text={text} onChange={onChange} />
+      <StyledFormControl>
+        <InputLabel id={`exercise-type-dropdown-${exerciseNumber + 1}`}>
+          Exercise type
+        </InputLabel>
+        <Select
+          value={type}
+          labelId={`exercise-type-dropdown-${exerciseNumber + 1}`}
+          onChange={e => {
+            onChange({ type: e.target.value, content: text })
+          }}
+        >
+          <MenuItem value="only_assignment">Only assignment</MenuItem>
+          <MenuItem value="essay">Essay</MenuItem>
+        </Select>
+      </StyledFormControl>
+      <MarkdownEditor
+        text={text}
+        onChange={e => {
+          onChange({ content: e.target.value, type })
+        }}
+      />
     </ExerciseCard>
   )
 }

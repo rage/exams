@@ -37,6 +37,7 @@ export interface SimpleExam {
 
 export interface NewExercise {
   content: string
+  type: string
 }
 
 export interface Exercise extends NewExercise {

@@ -37,6 +37,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
   const { locale } = useContext(LocaleContext)
   const now = useTime()
   const currentDateString = now.toLocaleString(DateTime.DATE_FULL)
+
   return (
     <Layout>
       <Typography variant="h3" component="h1">
@@ -46,11 +47,14 @@ const Page: NextPage<PageProps> = ({ exams }) => {
       <br />
 
       {exams
-        .filter(
-          o =>
-            DateTime.fromISO(o.starts_at).toLocaleString(DateTime.DATE_FULL) ===
-            currentDateString,
-        )
+        .filter(o => {
+          const start = DateTime.fromISO(o.starts_at)
+          const end = DateTime.fromISO(o.ends_at)
+          return (
+            start.toLocaleString(DateTime.DATE_FULL) === currentDateString ||
+            (now > start && now < end)
+          )
+        })
         .sort((o1, o2) =>
           DateTime.fromISO(o1.starts_at)
             .diff(DateTime.fromISO(o2.starts_at))

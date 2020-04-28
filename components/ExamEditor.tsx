@@ -218,14 +218,16 @@ const ExamEditor = ({
               key={exerciseNumber}
               exerciseNumber={exerciseNumber}
               text={entry.content}
+              type={entry.type}
               onDelete={() => {
                 const newArray = [...exerciseArray]
                 newArray.splice(exerciseNumber, 1)
                 setExerciseArray(newArray)
               }}
-              onChange={e => {
+              onChange={({ content, type }) => {
                 const newArray = [...exerciseArray]
-                newArray[exerciseNumber].content = e.target.value
+                newArray[exerciseNumber].content = content
+                newArray[exerciseNumber].type = type
                 setExerciseArray(newArray)
               }}
             />

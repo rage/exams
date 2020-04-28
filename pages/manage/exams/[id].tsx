@@ -82,7 +82,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
           <StyledCard key={exercise.id}>
             <CardContent>
               <Typography variant="h5" component="h2">
-                Exercise {i + 1}
+                Exercise {i + 1} ({exercise.type})
               </Typography>
 
               <div
