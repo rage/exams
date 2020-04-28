@@ -135,3 +135,20 @@ export async function fetchExamExercises(
   })
   return res.data.exercises
 }
+
+export async function saveAnswer(
+  exerciseId: string,
+  content: string,
+  accessToken: string,
+): Promise<void> {
+  const res = await client.post(
+    `/exercises/${exerciseId}/answer`,
+    { content },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  )
+  return res.data
+}

@@ -3,6 +3,7 @@ const { Model } = require("objection")
 import { userDetails } from "../../../../../services/moocfi"
 import ExamStart from "../../../../../backend/models/ExamStart"
 import Exercise from "../../../../../backend/models/Exercise"
+import Answer from "../../../../../backend/models/Answer"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
@@ -48,7 +49,12 @@ const handleGet = async (
       .json({ error: "Please start the exam in order to see the exercises." })
   }
   const exercises = await Exercise.query().where({
-    exam_id: req.query.id.toString(),
+    exam_id: req.query.id.toString()
   })
-  res.status(200).json({ exercises })
+
+  const answers = await Answer.query().where("user_id", userDetails.id).whereIn("exercise_id", exercises.map(o => o.id)).debug()
+
+
+
+  res.status(200).json({ exercises: exercises.map(ex => { return {...ex, answers: answers.filter(a => a.exercise_id === ex.id) }}) })
 }

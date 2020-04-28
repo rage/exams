@@ -15,6 +15,8 @@ import getAccessToken from "../../../../lib/getAccessToken"
 import { withLoggedIn } from "../../../../contexes/LoginStateContext"
 import withLocale from "../../../../lib/withLocale"
 import useTranslator from "../../../../hooks/useTranslator"
+import EssayEditor from "../../../../components/EssayEditor"
+import { maxBy } from "lodash"
 
 const ExerciseCard = styled(Card)`
   padding: 1rem;
@@ -82,6 +84,9 @@ const Page = ({ exam, examExercises, examStarts }) => {
       <br />
       {onGoing &&
         examExercises.map((o, i) => {
+          const latestAnswer = maxBy(o.answers, a =>
+            DateTime.fromISO(a.created_at).toMillis(),
+          )
           return (
             <ExerciseCard key={o.id}>
               <Typography variant="h5" component="h3">
@@ -93,13 +98,9 @@ const Page = ({ exam, examExercises, examStarts }) => {
                 }}
               />
               {o.type === "essay" && (
-                <TextField
-                  variant="outlined"
-                  fullWidth
-                  multiline
-                  rows={10}
-                  rowsMax={100}
-                  label={t("essay-field-label")}
+                <EssayEditor
+                  previousAnswer={latestAnswer?.content}
+                  exerciseId={o.id}
                 />
               )}
             </ExerciseCard>
