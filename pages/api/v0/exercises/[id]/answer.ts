@@ -46,10 +46,15 @@ const handlePost = async (
 
   // @ts-ignore
   const exam = exercise.exams
-  const examStarts = exam.exam_starts
+  const examStarts: any[] = exam.exam_starts
+
+  const ownExamStarts = examStarts.filter(o => o.user_id === userDetails.id)
+  if (!ownExamStarts[0]) {
+    return res.status(403).json({ error: "Time has ended" })
+  }
   // @ts-ignore
   const now = DateTime.local()
-  const startTime = DateTime.fromJSDate(examStarts[0].created_at)
+  const startTime = DateTime.fromJSDate(ownExamStarts[0].created_at)
   const endTime = startTime.plus(
     Duration.fromMillis(exam.time_minutes * MINUTE_IN_MS),
   )
