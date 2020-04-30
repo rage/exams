@@ -52,7 +52,7 @@ const handleGet = async (
     exam_id: req.query.id.toString()
   })
 
-  const answers = await Answer.query().where("user_id", userDetails.id).whereIn("exercise_id", exercises.map(o => o.id)).debug()
+  const answers = await Answer.query().where("user_id", userDetails.id).whereIn("exercise_id", exercises.map(o => o.id)).orderBy("created_at", "DESC")
 
 
 

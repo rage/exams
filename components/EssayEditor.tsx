@@ -54,12 +54,12 @@ const EssayEditor = ({ exerciseId, previousAnswer }: EssayEditorProps) => {
           setError(null)
           try {
             await saveAnswer(exerciseId, text, accessToken)
+            setSavedText(text)
           } catch (e) {
             setError(`Error: ${e.toString()}`)
           } finally {
             setSubmitting(false)
           }
-          setSavedText(text)
         }}
       >
         {currentSaved ? t("saved") : t("save")}

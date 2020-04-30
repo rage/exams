@@ -41,8 +41,6 @@ const handlePost = async (
 ) => {
 
   const exercise = await Exercise.query().withGraphJoined("exams").withGraphJoined("exams.exam_starts").findById(req.query.id.toString())
-  // TODO: Check if can answer
-  console.log(JSON.stringify(exercise, undefined, 2))
 
   // @ts-ignore
   const exam = exercise.exams

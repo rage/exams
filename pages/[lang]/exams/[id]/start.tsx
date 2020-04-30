@@ -84,9 +84,8 @@ const Page = ({ exam, examExercises, examStarts }) => {
       <br />
       {onGoing &&
         examExercises.map((o, i) => {
-          const latestAnswer = maxBy(o.answers, a =>
-            DateTime.fromISO(a.created_at).toMillis(),
-          )
+          // server sorts these
+          const latestAnswer = o.answers[0]
           return (
             <ExerciseCard key={o.id}>
               <Typography variant="h5" component="h3">
