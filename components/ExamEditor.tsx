@@ -232,7 +232,6 @@ const ExamEditor = ({
                   setExerciseArray(newArray)
                 }}
               />
-              <pre>{JSON.stringify(entry, undefined, 2)}</pre>
             </>
           )
         })}
