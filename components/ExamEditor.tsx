@@ -214,23 +214,26 @@ const ExamEditor = ({
 
         {exerciseArray.map((entry, exerciseNumber) => {
           return (
-            <ExerciseEditor
-              key={exerciseNumber}
-              exerciseNumber={exerciseNumber}
-              text={entry.content}
-              type={entry.type}
-              onDelete={() => {
-                const newArray = [...exerciseArray]
-                newArray.splice(exerciseNumber, 1)
-                setExerciseArray(newArray)
-              }}
-              onChange={({ content, type }) => {
-                const newArray = [...exerciseArray]
-                newArray[exerciseNumber].content = content
-                newArray[exerciseNumber].type = type
-                setExerciseArray(newArray)
-              }}
-            />
+            <>
+              <ExerciseEditor
+                key={exerciseNumber}
+                exerciseNumber={exerciseNumber}
+                text={entry.content}
+                type={entry.type}
+                onDelete={() => {
+                  const newArray = [...exerciseArray]
+                  newArray.splice(exerciseNumber, 1)
+                  setExerciseArray(newArray)
+                }}
+                onChange={({ content, type }) => {
+                  const newArray = [...exerciseArray]
+                  newArray[exerciseNumber].content = content
+                  newArray[exerciseNumber].type = type
+                  setExerciseArray(newArray)
+                }}
+              />
+              <pre>{JSON.stringify(entry, undefined, 2)}</pre>
+            </>
           )
         })}
         <ActionButton

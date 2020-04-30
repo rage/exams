@@ -41,7 +41,7 @@ async function handleGet(
   try {
     let query = Exam.query()
     if (admin) {
-      query = query.withGraphJoined("exercises")
+      query = query.withGraphJoined("exercises").orderBy("exercises.order", "ASC")
     }
     const exam = await query.findById(id)
     return res.status(200).json({ exam })
