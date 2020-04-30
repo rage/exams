@@ -255,6 +255,12 @@ const ExamEditor = ({
           onClick={async e => {
             e.preventDefault()
             setSubmitting(true)
+            const exercises = exerciseArray.map((ex, n) => {
+              return {
+                ...ex,
+                order: n + 1,
+              }
+            })
             try {
               let res = null
               if (isEdit) {
@@ -264,7 +270,7 @@ const ExamEditor = ({
                     name: name,
                     starts_at: startsAt.toISOString(),
                     ends_at: endsAt.toISOString(),
-                    exercises: exerciseArray,
+                    exercises,
                     time_minutes: timeMinutes,
                     pre_instructions: preExamInstructions,
                   },

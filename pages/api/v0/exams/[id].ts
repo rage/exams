@@ -65,7 +65,7 @@ async function handlePatch(
     const result = await transaction(Exam.knex(), trx => {
       return Exam.query(trx)
         .allowGraph(
-          "[id, name, starts_at, ends_at, time_minutes, pre_instructions, exercises.[content, id]]",
+          "[id, name, starts_at, ends_at, time_minutes, pre_instructions, exercises.[content, id, order]]",
         )
         .upsertGraph(req.body.exam)
     })
