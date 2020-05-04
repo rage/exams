@@ -1,6 +1,9 @@
 import { Model } from "objection"
 
 export default class Exam extends Model {
+  id: string
+  has_user_whitelist: boolean
+
   static get tableName() {
     return "exams"
   }

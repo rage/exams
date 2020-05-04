@@ -3,6 +3,7 @@ import Exam from "../../../../backend/models/Exam"
 const { Model } = require("objection")
 import { transaction } from "objection"
 import { userDetails } from "../../../../services/moocfi"
+import ExamWhitelistedUser from "../../../../backend/models/ExamWhitelistedUser"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../knexfile")
@@ -23,7 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const admin = details.administrator
 
   if (req.method === "GET") {
-    return handleGet(req, res, admin)
+    return handleGet(req, res, details)
   }
   if (req.method === "PATCH") {
     return handlePatch(req, res, admin)
@@ -35,8 +36,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 async function handleGet(
   req: NextApiRequest,
   res: NextApiResponse,
-  admin: boolean,
+  details: any,
 ) {
+  const admin = details.administrator
   const id = req.query.id
   try {
     let query = Exam.query()
@@ -44,8 +46,19 @@ async function handleGet(
       query = query.withGraphJoined("exercises").orderBy("exercises.order", "ASC")
     }
     const exam = await query.findById(id)
+    if (exam.has_user_whitelist && !admin) {
+      const whitelistedUsers = await ExamWhitelistedUser.query().where({
+        user_id: details.id,
+        exam_id: exam.id
+      }).limit(1)
+      if (whitelistedUsers.length < 1) {
+        return res.status(403).json({ error: "You're not on the whitelist." })
+      }
+    }
+
     return res.status(200).json({ exam })
   } catch (e) {
+    console.error(e)
     return res.status(500).json({ error: e.message })
   }
 }

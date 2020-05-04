@@ -4,6 +4,7 @@ import { userDetails } from "../../../../../services/moocfi"
 import ExamStart from "../../../../../backend/models/ExamStart"
 import Exam from "../../../../../backend/models/Exam"
 import { DateTime } from "luxon"
+import ExamWhitelistedUser from "../../../../../backend/models/ExamWhitelistedUser"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
@@ -59,6 +60,17 @@ const handlePost = async (
   if (now < startTime || now > endTime) {
     return res.status(403).json({ error: "Exam is not open at the moment." })
   }
+
+  if (exam.has_user_whitelist && !userDetails.administrator) {
+    const whitelistedUsers = await ExamWhitelistedUser.query().where({
+      user_id: userDetails.id,
+      exam_id: exam.id
+    }).limit(1)
+    if (whitelistedUsers.length < 1) {
+      return res.status(403).json({ error: "You're not on the whitelist." })
+    }
+  }
+
   await ExamStart.query()
     .allowGraph("[user_id, exam_id]")
     .insertGraph({
