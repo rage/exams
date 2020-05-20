@@ -34,7 +34,7 @@ const EssayEditor = ({ exerciseId, previousAnswer }: EssayEditorProps) => {
         fullWidth
         multiline
         value={text}
-        onChange={e => {
+        onChange={(e) => {
           setError(null)
           setText(e.target.value)
         }}

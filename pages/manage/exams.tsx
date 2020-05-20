@@ -37,7 +37,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
 
       <br />
 
-      {exams.map(o => {
+      {exams.map((o) => {
         return (
           <Link
             key={o.id}
@@ -73,7 +73,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
   )
 }
 
-Page.getInitialProps = async ctx => {
+Page.getInitialProps = async (ctx) => {
   const exams = await fetchExams(getAccessToken(ctx))
   return { exams }
 }

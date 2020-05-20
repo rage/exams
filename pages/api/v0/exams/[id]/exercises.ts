@@ -7,7 +7,11 @@ import Answer from "../../../../../backend/models/Answer"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
-const knex = Knex(process.env.NODE_ENV === "production" ? knexConfig.production : knexConfig.development)
+const knex = Knex(
+  process.env.NODE_ENV === "production"
+    ? knexConfig.production
+    : knexConfig.development,
+)
 // Bind all Models to the knex instance. You only
 // need to do this once before you use any of
 // your model classes.
@@ -48,13 +52,23 @@ const handleGet = async (
       .status(403)
       .json({ error: "Please start the exam in order to see the exercises." })
   }
-  const exercises = await Exercise.query().where({
-    exam_id: req.query.id.toString()
-  }).orderBy("order", "ASC")
+  const exercises = await Exercise.query()
+    .where({
+      exam_id: req.query.id.toString(),
+    })
+    .orderBy("order", "ASC")
 
-  const answers = await Answer.query().where("user_id", userDetails.id).whereIn("exercise_id", exercises.map(o => o.id)).orderBy("created_at", "DESC")
+  const answers = await Answer.query()
+    .where("user_id", userDetails.id)
+    .whereIn(
+      "exercise_id",
+      exercises.map((o) => o.id),
+    )
+    .orderBy("created_at", "DESC")
 
-
-
-  res.status(200).json({ exercises: exercises.map(ex => { return {...ex, answers: answers.filter(a => a.exercise_id === ex.id) }}) })
+  res.status(200).json({
+    exercises: exercises.map((ex) => {
+      return { ...ex, answers: answers.filter((a) => a.exercise_id === ex.id) }
+    }),
+  })
 }

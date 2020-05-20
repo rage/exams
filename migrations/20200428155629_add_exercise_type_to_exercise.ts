@@ -1,7 +1,7 @@
 import * as Knex from "knex"
 
 exports.up = async (knex: Knex): Promise<any> => {
-  await knex.schema.alterTable("exercises", t => {
+  await knex.schema.alterTable("exercises", (t) => {
     t.enu("type", ["only_assignment", "essay"], {
       useNative: true,
       enumName: "exercise_type",
@@ -14,7 +14,7 @@ exports.up = async (knex: Knex): Promise<any> => {
 }
 
 exports.down = async (knex: Knex): Promise<any> => {
-  await knex.schema.alterTable("exercises", t => {
+  await knex.schema.alterTable("exercises", (t) => {
     t.dropColumn("type")
     t.dropColumn("min_words")
     t.dropColumn("max_words")

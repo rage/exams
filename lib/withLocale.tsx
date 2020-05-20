@@ -20,7 +20,7 @@ export default (WrappedPage: NextPage<any>) => {
     )
   }
 
-  WithLocale.getInitialProps = async ctx => {
+  WithLocale.getInitialProps = async (ctx) => {
     if (typeof ctx.query.lang !== "string" || !isLocale(ctx.query.lang)) {
       return { locale: null }
     }

@@ -125,7 +125,7 @@ const Page = ({ exam, examExercises, examStarts }) => {
   )
 }
 
-Page.getInitialProps = async ctx => {
+Page.getInitialProps = async (ctx) => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   const examExercises = await fetchExamExercises(
     ctx.query.id?.toString(),

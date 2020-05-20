@@ -7,7 +7,11 @@ import ExamWhitelistedUser from "../../../../backend/models/ExamWhitelistedUser"
 
 const Knex = require("knex")
 const knexConfig = require("../../../../knexfile")
-const knex = Knex(process.env.NODE_ENV === "production" ? knexConfig.production : knexConfig.development)
+const knex = Knex(
+  process.env.NODE_ENV === "production"
+    ? knexConfig.production
+    : knexConfig.development,
+)
 // Bind all Models to the knex instance. You only
 // need to do this once before you use any of
 // your model classes.
@@ -43,14 +47,18 @@ async function handleGet(
   try {
     let query = Exam.query()
     if (admin) {
-      query = query.withGraphJoined("exercises").orderBy("exercises.order", "ASC")
+      query = query
+        .withGraphJoined("exercises")
+        .orderBy("exercises.order", "ASC")
     }
     const exam = await query.findById(id)
     if (exam.has_user_whitelist && !admin) {
-      const whitelistedUsers = await ExamWhitelistedUser.query().where({
-        user_id: details.id,
-        exam_id: exam.id
-      }).limit(1)
+      const whitelistedUsers = await ExamWhitelistedUser.query()
+        .where({
+          user_id: details.id,
+          exam_id: exam.id,
+        })
+        .limit(1)
       if (whitelistedUsers.length < 1) {
         return res.status(403).json({ error: "You're not on the whitelist." })
       }
@@ -75,7 +83,7 @@ async function handlePatch(
     const id = req.query.id
     const exam = req.body.exam
     exam.id = id
-    const result = await transaction(Exam.knex(), trx => {
+    const result = await transaction(Exam.knex(), (trx) => {
       return Exam.query(trx)
         .allowGraph(
           "[id, name, starts_at, ends_at, time_minutes, pre_instructions, exercises.[content, id, order]]",

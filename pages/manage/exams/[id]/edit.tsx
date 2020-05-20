@@ -43,7 +43,7 @@ const Page = ({ exam }: PageProps) => {
   )
 }
 
-Page.getInitialProps = async ctx => {
+Page.getInitialProps = async (ctx) => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   return { exam }
 }

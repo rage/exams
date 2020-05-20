@@ -47,7 +47,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
       <br />
 
       {exams
-        .filter(o => {
+        .filter((o) => {
           const start = DateTime.fromISO(o.starts_at)
           const end = DateTime.fromISO(o.ends_at)
           return (
@@ -60,7 +60,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
             .diff(DateTime.fromISO(o2.starts_at))
             .as("seconds"),
         )
-        .map(o => {
+        .map((o) => {
           return (
             <Link
               key={o.id}
@@ -90,7 +90,7 @@ const Page: NextPage<PageProps> = ({ exams }) => {
   )
 }
 
-Page.getInitialProps = async ctx => {
+Page.getInitialProps = async (ctx) => {
   const exams = await fetchExams(getAccessToken(ctx))
   return { exams }
 }

@@ -8,7 +8,11 @@ import ExamWhitelistedUser from "../../../../../backend/models/ExamWhitelistedUs
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
-const knex = Knex(process.env.NODE_ENV === "production" ? knexConfig.production : knexConfig.development)
+const knex = Knex(
+  process.env.NODE_ENV === "production"
+    ? knexConfig.production
+    : knexConfig.development,
+)
 // Bind all Models to the knex instance. You only
 // need to do this once before you use any of
 // your model classes.
@@ -62,22 +66,22 @@ const handlePost = async (
   }
 
   if (exam.has_user_whitelist && !userDetails.administrator) {
-    const whitelistedUsers = await ExamWhitelistedUser.query().where({
-      user_id: userDetails.id,
-      exam_id: exam.id
-    }).limit(1)
+    const whitelistedUsers = await ExamWhitelistedUser.query()
+      .where({
+        user_id: userDetails.id,
+        exam_id: exam.id,
+      })
+      .limit(1)
     if (whitelistedUsers.length < 1) {
       return res.status(403).json({ error: "You're not on the whitelist." })
     }
   }
 
-  await ExamStart.query()
-    .allowGraph("[user_id, exam_id]")
-    .insertGraph({
-      // @ts-ignore
-      user_id: userDetails.id,
-      exam_id: req.query.id.toString(),
-    })
+  await ExamStart.query().allowGraph("[user_id, exam_id]").insertGraph({
+    // @ts-ignore
+    user_id: userDetails.id,
+    exam_id: req.query.id.toString(),
+  })
   res.status(200).json({ message: "You have started the exam." })
 }
 

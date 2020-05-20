@@ -25,7 +25,7 @@ export default class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = async ctx => {
+MyDocument.getInitialProps = async (ctx) => {
   // Resolution order
   //
   // On the server:
@@ -57,7 +57,7 @@ MyDocument.getInitialProps = async ctx => {
   try {
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: App => props => {
+        enhanceApp: (App) => (props) => {
           const MuiStylesDataWrapper = muiSheets.collect(<App {...props} />)
 
           const styledComponentsDataWrapper = styledSheet.collectStyles(

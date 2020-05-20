@@ -150,7 +150,7 @@ const ExamEditor = ({
             type="text"
             required
             value={name}
-            onChange={e => {
+            onChange={(e) => {
               setName(e.target.value)
             }}
           />
@@ -162,7 +162,7 @@ const ExamEditor = ({
             inputVariant="outlined"
             fullWidth
             value={startsAt}
-            onChange={date => {
+            onChange={(date) => {
               setStartsAt(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
@@ -176,7 +176,7 @@ const ExamEditor = ({
             inputVariant="outlined"
             fullWidth
             value={endsAt}
-            onChange={date => {
+            onChange={(date) => {
               setEndsAt(date.toJSDate())
             }}
             format="yyyy-MM-dd HH:mm"
@@ -192,7 +192,7 @@ const ExamEditor = ({
             type="number"
             required
             value={timeMinutes}
-            onChange={e => {
+            onChange={(e) => {
               setTimeMinutes(parseInt(e.target.value, 10))
             }}
           />
@@ -206,7 +206,7 @@ const ExamEditor = ({
           </ExerciseCardTitleContainer>
           <MarkdownEditor
             text={preExamInstructions}
-            onChange={e => {
+            onChange={(e) => {
               setPreExamInstructions(e.target.value)
             }}
           ></MarkdownEditor>
@@ -254,7 +254,7 @@ const ExamEditor = ({
           type="submit"
           variant="contained"
           disabled={!isValid || submitting}
-          onClick={async e => {
+          onClick={async (e) => {
             e.preventDefault()
             setSubmitting(true)
             const exercises = exerciseArray.map((ex, n) => {

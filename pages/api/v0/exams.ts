@@ -48,7 +48,7 @@ const handlePost = async (
   if (!admin) {
     return res.status(403).json({ error: "Only admins can do that" })
   }
-  const inserted = await transaction(Exam.knex(), trx => {
+  const inserted = await transaction(Exam.knex(), (trx) => {
     return Exam.query(trx)
       .allowGraph(
         "[name, starts_at, ends_at, time_minutes, pre_instructions, exercises.content]",
@@ -70,14 +70,14 @@ const handleGet = async (
       .where("user_id", details.id)
       .whereIn(
         "exam_id",
-        exams.map(o => o.id),
+        exams.map((o) => o.id),
       )
-    exams = exams.filter(exam => {
+    exams = exams.filter((exam) => {
       if (!exam.has_user_whitelist) {
         return true
       }
       // TODO: group whitelists for more efficicency
-      return whitelists.some(o => o.exam_id === exam.id)
+      return whitelists.some((o) => o.exam_id === exam.id)
     })
   }
   res.status(200).json({ exams: exams })

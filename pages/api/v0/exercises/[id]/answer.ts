@@ -9,7 +9,11 @@ const MINUTE_IN_MS = 60000
 
 const Knex = require("knex")
 const knexConfig = require("../../../../../knexfile")
-const knex = Knex(process.env.NODE_ENV === "production" ? knexConfig.production : knexConfig.development)
+const knex = Knex(
+  process.env.NODE_ENV === "production"
+    ? knexConfig.production
+    : knexConfig.development,
+)
 // Bind all Models to the knex instance. You only
 // need to do this once before you use any of
 // your model classes.
@@ -39,14 +43,16 @@ const handlePost = async (
   res: NextApiResponse,
   userDetails: any,
 ) => {
-
-  const exercise = await Exercise.query().withGraphJoined("exams").withGraphJoined("exams.exam_starts").findById(req.query.id.toString())
+  const exercise = await Exercise.query()
+    .withGraphJoined("exams")
+    .withGraphJoined("exams.exam_starts")
+    .findById(req.query.id.toString())
 
   // @ts-ignore
   const exam = exercise.exams
   const examStarts: any[] = exam.exam_starts
 
-  const ownExamStarts = examStarts.filter(o => o.user_id === userDetails.id)
+  const ownExamStarts = examStarts.filter((o) => o.user_id === userDetails.id)
   if (!ownExamStarts[0]) {
     return res.status(403).json({ error: "Time has ended" })
   }
@@ -70,7 +76,7 @@ const handlePost = async (
       exam_id: exercise.exams.id.toString(),
       // @ts-ignore
       exercise_id: exercise.id,
-      content: req.body.content
+      content: req.body.content,
     })
   res.status(200).json({ message: "You have started the exam." })
 }

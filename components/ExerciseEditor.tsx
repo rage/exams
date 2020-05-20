@@ -68,7 +68,7 @@ const ExerciseEditor = ({
         <Select
           value={type}
           labelId={`exercise-type-dropdown-${exerciseNumber + 1}`}
-          onChange={e => {
+          onChange={(e) => {
             onChange({ type: e.target.value, content: text })
           }}
         >
@@ -78,7 +78,7 @@ const ExerciseEditor = ({
       </StyledFormControl>
       <MarkdownEditor
         text={text}
-        onChange={e => {
+        onChange={(e) => {
           onChange({ content: e.target.value, type })
         }}
       />

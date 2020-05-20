@@ -147,7 +147,7 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   )
 }
 
-Page.getInitialProps = async ctx => {
+Page.getInitialProps = async (ctx) => {
   const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
   const location = `/${ctx.query.lang?.toString()}/exams/${ctx.query.id?.toString()}/start`
   const examStarts = await fetchExamStarts(
