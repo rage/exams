@@ -117,10 +117,4 @@ const Page: NextPage = () => {
   )
 }
 
-Page.getInitialProps = async (ctx) => {
-  // const exams = await fetchExams(getAccessToken(ctx))
-  // return { exams }
-  return {}
-}
-
 export default withLocale(withLoggedIn(Page))

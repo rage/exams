@@ -67,7 +67,7 @@ const handlePost = async (
     return res.status(403).json({ error: "Time has ended" })
   }
 
-  await Answer.query()
+  const savedAnswer = await Answer.query()
     .allowGraph("[content, exam_id, exercise_id, user_id]")
     .insertGraph({
       // @ts-ignore
@@ -78,5 +78,5 @@ const handlePost = async (
       exercise_id: exercise.id,
       content: req.body.content,
     })
-  res.status(200).json({ message: "You have started the exam." })
+  res.status(200).json({ data: savedAnswer })
 }
