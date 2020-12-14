@@ -35,5 +35,6 @@
   "save": "Tallenna",
   "saved": "Tallennettu",
   "words": "Sanoja",
-  "loading": "Ladataan"
+  "loading": "Ladataan",
+  "loading-error": "Latausvirhe"
 }

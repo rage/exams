@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Typography, Card, TextField } from "@material-ui/core"
 import { DateTime, Duration } from "luxon"
 import { Parser, HtmlRenderer } from "commonmark"
@@ -11,12 +11,14 @@ import {
   fetchExamExercises,
   fetchExamStarts,
 } from "../../../../services/api"
-import getAccessToken from "../../../../lib/getAccessToken"
-import { withLoggedIn } from "../../../../contexes/LoginStateContext"
+import LoginStateContext, {
+  withLoggedIn,
+} from "../../../../contexes/LoginStateContext"
 import withLocale from "../../../../lib/withLocale"
 import useTranslator from "../../../../hooks/useTranslator"
 import EssayEditor from "../../../../components/EssayEditor"
-import { maxBy } from "lodash"
+import usePromise from "react-use-promise"
+import { useRouter } from "next/router"
 
 const ExerciseCard = styled(Card)`
   padding: 1rem;
@@ -25,8 +27,33 @@ const ExerciseCard = styled(Card)`
 
 const MINUTE_IN_MS = 60000
 
-const Page = ({ exam, examExercises, examStarts }) => {
+const Page = () => {
   const t = useTranslator()
+  const router = useRouter()
+  const now = useTime()
+  const { accessToken } = useContext(LoginStateContext)
+  const examId = router.query.id?.toString()
+  const [exam, examError] = usePromise(() => fetchExam(examId, accessToken), [
+    accessToken,
+    examId,
+  ])
+  const [examExercises, examExercisesError] = usePromise(
+    () => fetchExamExercises(examId, accessToken),
+    [accessToken, examId],
+  )
+  const [examStarts, examStartsError] = usePromise(
+    () => fetchExamStarts(examId, accessToken),
+    [accessToken, examId],
+  )
+
+  if (examError || examExercisesError || examStartsError) {
+    return <Layout>{t("loading-error")}</Layout>
+  }
+
+  if (!exam || !examExercises || !examStarts) {
+    return <Layout>{t("loading")}...</Layout>
+  }
+
   const reader = new Parser()
   const writer = new HtmlRenderer()
   const startTime = DateTime.fromISO(examStarts[0].created_at).setLocale(
@@ -35,8 +62,6 @@ const Page = ({ exam, examExercises, examStarts }) => {
   const endTime = startTime.plus(
     Duration.fromMillis(exam.time_minutes * MINUTE_IN_MS),
   )
-
-  const now = useTime()
 
   let onGoing = true
 
@@ -123,20 +148,6 @@ const Page = ({ exam, examExercises, examStarts }) => {
       </ExerciseCard>
     </Layout>
   )
-}
-
-Page.getInitialProps = async (ctx) => {
-  const exam = await fetchExam(ctx.query.id?.toString(), getAccessToken(ctx))
-  const examExercises = await fetchExamExercises(
-    ctx.query.id?.toString(),
-    getAccessToken(ctx),
-  )
-  const examStarts = await fetchExamStarts(
-    ctx.query.id?.toString(),
-    getAccessToken(ctx),
-  )
-
-  return { exam, examExercises, examStarts }
 }
 
 export default withLocale(withLoggedIn(Page))

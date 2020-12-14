@@ -164,6 +164,11 @@ const ExamEditor = ({
             label="Starts at"
             value={startsAt}
             onChange={(date) => {
+              // @ts-ignore: Sometimes this is a Luxon date
+              if (date.toJSDate) {
+                // @ts-ignore: Sometimes this is a Luxon date
+                date = date.toJSDate()
+              }
               setStartsAt(date)
             }}
             inputFormat="yyyy-MM-dd HH:mm"
@@ -178,6 +183,11 @@ const ExamEditor = ({
             label="Ends at"
             value={endsAt}
             onChange={(date) => {
+              // @ts-ignore: Sometimes this is a Luxon date
+              if (date.toJSDate) {
+                // @ts-ignore: Sometimes this is a Luxon date
+                date = date.toJSDate()
+              }
               setEndsAt(date)
             }}
             inputFormat="yyyy-MM-dd HH:mm"

@@ -21,6 +21,7 @@
     "prop-types": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-use-promise": "^0.3.1",
     "styled-components": "^5.2.1",
     "swr": "^0.3.9",
     "tmc-client-js": "0.0.9"

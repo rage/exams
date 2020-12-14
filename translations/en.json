@@ -35,5 +35,6 @@
   "save": "Save",
   "saved": "Saved",
   "words": "Words",
-  "loading": "Loading"
+  "loading": "Loading",
+  "loading-error": "Loading error"
 }

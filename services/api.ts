@@ -127,7 +127,7 @@ export async function fetchExamStarts(
 export async function fetchExamExercises(
   examId: string,
   accessToken: string,
-): Promise<void> {
+): Promise<any> {
   const res = await client.get(`/exams/${examId}/exercises`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
@@ -140,7 +140,7 @@ export async function saveAnswer(
   exerciseId: string,
   content: string,
   accessToken: string,
-): Promise<void> {
+): Promise<any> {
   const res = await client.post(
     `/exercises/${exerciseId}/answer`,
     { content },

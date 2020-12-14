@@ -23,8 +23,8 @@ const defaultValue: LoginStateContextValue = {
 }
 
 export const withLoggedIn = (PageComponent) => {
-  const WithLoggedIn = ({ accessToken, admin, ...pageProps }) => {
-    const [currentToken, setCurrentToken] = useState(accessToken)
+  const WithLoggedIn = ({ initialAccessToken, admin, ...pageProps }) => {
+    const [currentToken, setCurrentToken] = useState(initialAccessToken)
     const [currentAdmin, setCurrentAdmin] = useState(admin)
     return (
       <LoginStateContext.Provider
@@ -33,7 +33,7 @@ export const withLoggedIn = (PageComponent) => {
           admin: !!currentAdmin,
           setAccessToken: setCurrentToken,
           setAdmin: setCurrentAdmin,
-          accessToken: accessToken,
+          accessToken: currentToken,
         }}
       >
         <PageComponent {...pageProps} />
@@ -54,7 +54,7 @@ export const withLoggedIn = (PageComponent) => {
     if (accessToken === "") {
       accessToken = undefined
     }
-    return { ...pageProps, accessToken, admin }
+    return { ...pageProps, initialAccessToken: accessToken, admin }
   }
   return WithLoggedIn
 }
