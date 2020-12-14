@@ -4,9 +4,8 @@ import Head from "next/head"
 import { StylesProvider, ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import theme from "../lib/theme"
-import { MuiPickersUtilsProvider } from "@material-ui/pickers"
-import LuxonUtils from "@date-io/luxon"
-import useTranslator from "../hooks/useTranslator"
+import { LocalizationProvider } from "@material-ui/pickers"
+import LuxonUtils from "@material-ui/pickers/adapter/luxon"
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -33,9 +32,9 @@ export default class MyApp extends App {
           <ThemeProvider theme={theme}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            <MuiPickersUtilsProvider utils={LuxonUtils}>
+            <LocalizationProvider dateAdapter={LuxonUtils}>
               <Component {...pageProps} />
-            </MuiPickersUtilsProvider>
+            </LocalizationProvider>
           </ThemeProvider>
         </StylesProvider>
       </React.Fragment>

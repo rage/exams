@@ -16,7 +16,7 @@ import { useRouter } from "next/router"
 
 import { Parser, HtmlRenderer } from "commonmark"
 
-import { KeyboardDateTimePicker } from "@material-ui/pickers"
+import { DateTimePicker } from "@material-ui/pickers"
 import { createExam, Exercise, updateExam } from "../services/api"
 import Link from "next/link"
 import ExerciseEditor from "./ExerciseEditor"
@@ -156,31 +156,31 @@ const ExamEditor = ({
           />
         </Row>
         <Row>
-          <KeyboardDateTimePicker
+          <DateTimePicker
+            renderInput={(props) => (
+              <TextField fullWidth variant="outlined" {...props} />
+            )}
             ampm={false}
             label="Starts at"
-            inputVariant="outlined"
-            fullWidth
             value={startsAt}
             onChange={(date) => {
-              setStartsAt(date.toJSDate())
+              setStartsAt(date)
             }}
-            format="yyyy-MM-dd HH:mm"
-            required
+            inputFormat="yyyy-MM-dd HH:mm"
           />
         </Row>
         <Row>
-          <KeyboardDateTimePicker
+          <DateTimePicker
+            renderInput={(props) => (
+              <TextField fullWidth variant="outlined" {...props} />
+            )}
             ampm={false}
             label="Ends at"
-            inputVariant="outlined"
-            fullWidth
             value={endsAt}
             onChange={(date) => {
-              setEndsAt(date.toJSDate())
+              setEndsAt(date)
             }}
-            format="yyyy-MM-dd HH:mm"
-            required
+            inputFormat="yyyy-MM-dd HH:mm"
           />
         </Row>
         <Row>

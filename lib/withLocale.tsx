@@ -8,7 +8,7 @@ interface LangProps {
   locale?: Locale
 }
 
-export default (WrappedPage: NextPage<any>) => {
+const withLocale = (WrappedPage: NextPage<any>) => {
   const WithLocale: NextPage<any, LangProps> = ({ locale, ...pageProps }) => {
     if (!locale) {
       return <Error statusCode={404} />
@@ -35,3 +35,5 @@ export default (WrappedPage: NextPage<any>) => {
 
   return WithLocale
 }
+
+export default withLocale

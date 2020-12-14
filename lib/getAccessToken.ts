@@ -1,5 +1,7 @@
 import cookies from "next-cookies"
 
-export default (ctx) => {
+const getAccessToken = (ctx) => {
   return cookies(ctx).access_token
 }
+
+export default getAccessToken

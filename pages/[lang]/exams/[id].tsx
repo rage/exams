@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import { Parser, HtmlRenderer } from "commonmark"
 import { NextPage } from "next"
 import styled from "styled-components"
@@ -32,14 +32,11 @@ import useTranslator from "../../../hooks/useTranslator"
 import { LocaleContext } from "../../../contexes/LocaleContext"
 
 interface PageProps {
-  exam: Exam
+  exam?: Exam
+  redirectTo?: string
 }
 
-const StyledCard = styled(Card)`
-  margin-bottom: 1rem;
-`
-
-const Page: NextPage<PageProps> = ({ exam }) => {
+const Page: NextPage<PageProps> = ({ exam, redirectTo }) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const { accessToken } = useContext(LoginStateContext)
   const t = useTranslator()
@@ -47,9 +44,19 @@ const Page: NextPage<PageProps> = ({ exam }) => {
   const reader = new Parser()
   const writer = new HtmlRenderer()
   const router = useRouter()
+  const now = useTime()
+
+  useEffect(() => {
+    if (redirectTo) {
+      router.push(redirectTo)
+    }
+  }, [redirectTo])
+
+  if (!exam) {
+    return <Layout>{t("loading")}...</Layout>
+  }
 
   const startTime = DateTime.fromISO(exam.starts_at)
-  const now = useTime()
   const endTime = DateTime.fromISO(exam.ends_at)
 
   let canStart = true
@@ -167,10 +174,9 @@ Page.getInitialProps = async (ctx) => {
       return
     }
 
-    // @ts-ignore
-    Router.replace(location)
+    return { exam: undefined, redirectTo: location }
   }
-  return { exam }
+  return { exam, redirectTo: undefined }
 }
 
 export default withLocale(withLoggedIn(Page))

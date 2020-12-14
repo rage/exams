@@ -1,13 +1,13 @@
 import React from "react"
-import Document, { Head, Main, NextScript } from "next/document"
+import Document, { Html, Head, Main, NextScript } from "next/document"
 import { ServerStyleSheets as MuiServerStyleSheets } from "@material-ui/core/styles"
 import { ServerStyleSheet as StyledServerStyleSheet } from "styled-components"
 import theme from "../lib/theme"
 
-export default class MyDocument extends Document {
+class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <Html>
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
@@ -20,11 +20,13 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     )
   }
 }
 
+// `getInitialProps` belongs to `_document` (instead of `_app`),
+// it's compatible with server-side generation (SSG).
 MyDocument.getInitialProps = async (ctx) => {
   // Resolution order
   //
@@ -70,15 +72,12 @@ MyDocument.getInitialProps = async (ctx) => {
     const initialProps = await Document.getInitialProps(ctx)
     return {
       ...initialProps,
-
-      // if we were to use GlobalStyles, we'd insert them here - or _app before <Head> ?
-      styles: (
-        <React.Fragment>
-          {initialProps.styles}
-          {muiSheets.getStyleElement()}
-          {styledSheet.getStyleElement()}
-        </React.Fragment>
-      ),
+      // Styles fragment is rendered after the app and page rendering finish.
+      styles: [
+        ...React.Children.toArray(initialProps.styles),
+        muiSheets.getStyleElement(),
+        styledSheet.getStyleElement(),
+      ],
     }
   } catch (e) {
     console.warn("Rendering styles crashed with", e)
@@ -86,3 +85,5 @@ MyDocument.getInitialProps = async (ctx) => {
     styledSheet.seal()
   }
 }
+
+export default MyDocument
