@@ -18,9 +18,10 @@ const knex = Knex(
 Model.knex(knex)
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const authorization = req.headers.authorization
-    .toLowerCase()
-    .replace("bearer ", "")
+  const authorization = req.headers.authorization?.replace(/bearer /i, "")
+  if (!authorization) {
+    return res.status(403).json({ error: "Please log in" })
+  }
   const details = await userDetails(authorization)
   if (!details.id) {
     return res.status(403).json({ error: "Please log in" })

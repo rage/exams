@@ -21,9 +21,7 @@ Model.knex(knex)
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   let admin = false
-  const authorization = req.headers.authorization
-    .toLowerCase()
-    .replace("bearer ", "")
+  const authorization = req.headers.authorization.replace(/bearer /i, "")
 
   const details = await userDetails(authorization)
 
